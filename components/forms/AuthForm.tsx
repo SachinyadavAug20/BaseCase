@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, DefaultValues, FieldValue, FieldValues, Path, SubmitHandler, useForm, } from "react-hook-form";
+import { Controller, DefaultValues, FieldValues, Path, SubmitHandler, useForm, } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -102,7 +102,7 @@ const AuthFormOfUsername = <T extends FieldValues>({
             >
               Reset
             </Button>
-            <Button type="submit" form="form-rhf-input" disabled={form.formState.isSubmitted} 
+            <Button type="submit" form="form-rhf-input" disabled={form.formState.isSubmitting} 
             className={buttonClass}
             >
               {form.formState.isSubmitted?buttonText==="Sign In"?"Signing In...":"Signing Up...":buttonText}
@@ -110,7 +110,6 @@ const AuthFormOfUsername = <T extends FieldValues>({
           </Field>
           </div>
           {formtype ==="SIGN_IN"?<p>
-
             Don't have an account?{" "} <Link href={ROUTES.SIGN_UP} className="paragraph-semibold primary-text-gradient">Sign Up</Link>
             </p>:<p>
             Already have an account?{" "} <Link href={ROUTES.SIGN_IN} className="paragraph-semibold primary-text-gradient">Sign In</Link>

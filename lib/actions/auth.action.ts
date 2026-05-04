@@ -10,9 +10,6 @@ import bcrypt from "bcryptjs";
 import Account from "@/dataBase/account.model";
 import { signIn } from "@/auth";
 import { NotFoundError } from "../http-error";
-import { revalidatePath } from "next/cache";
-import Home from "@/app/(root)/page";
-import ROUTES from "@/constant/routes";
 
 export async function signUpWithCredentials(
   params: authcredentials,
@@ -53,7 +50,6 @@ export async function signUpWithCredentials(
     await session.commitTransaction();
 
     await signIn("credentials", { email, password, redirect: false });
-    revalidatePath(ROUTES.HOME)
     return { success: true };
   } catch (error) {
     await session.abortTransaction();
@@ -88,7 +84,6 @@ export async function signInWithCredentials(
     );
     if (!passwordMatch) throw new Error("Password not match");
     await signIn("credentials", { email, password, redirect: false });
-    revalidatePath(ROUTES.HOME)
     return { success: true };
   } catch (error) {
     return handleError(error) as ErrorResponse;

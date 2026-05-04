@@ -6,12 +6,16 @@ import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 
-const NavLinks = ({isMobileNav=false}:{isMobileNav?:boolean}) => {
+const NavLinks = ({isMobileNav=false,userId}:{isMobileNav?:boolean,userId?:string}) => {
   const pathname=usePathname()
   return (
     <div className="px-1">
     {sidebarLinks.map((link)=>{
       const isActive = (pathname.includes(link.route) && link.route.length>1) || pathname===link.route;
+      if(link.route==="/profile"){
+        if(userId) link.route=`${link.route}/${userId}`
+        else return null;
+      }
 
       const linkComponent=(
         <Link href={link.route} key={link.label} className={`${isActive 

@@ -1,21 +1,22 @@
-"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import ROUTES from "@/constant/routes";
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
 import NavLinks from "./navbar/NavLinks";
+import { auth } from "@/auth";
+import { signOut } from "@/auth";
+import { LogOut } from "lucide-react";
 
-const Leftsidebar = () => {
-  const session = useSession();
+const Leftsidebar = async() => {
+  const session = await auth();
+  const userId = session?.user?.id;
   return (
     <section className="custom-scrollbar background-light900_dark300 light-border sticky top-0 left-0 h-screen flex flex-col justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
       <div className="flex flex-1 flex-col gap-6">
-        <NavLinks />
+        <NavLinks userId={userId}/>
       </div>
       <div className="flex flex-col gap-3">
-        {session.status === "unauthenticated" && (
+        {!userId && (
           <div className="flex flex-col gap-3 ">
             <Button
               className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none background-light900_dark200! text-dark500_light700!"
@@ -51,6 +52,18 @@ const Leftsidebar = () => {
               </Link>
             </Button>
           </div>
+        )}
+        {userId &&(
+          <form action={async()=>{
+            "use server"
+            await signOut()
+          }}>
+            <Button type="submit" className="base-medium w-fit bg-transparent! px-4 py-3">
+            <LogOut className="size-5 text-black dark:text-white"/>
+            <span className="max-lg:hidden text-dark300_light900">
+              Logout</span>
+            </Button>
+          </form>
         )}
         {/*session.status === "authenticated" && (
           <div className="flex flex-col gap-2 justify-center items-center">

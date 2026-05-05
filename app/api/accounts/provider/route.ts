@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     const account = await Account.findOne({providerAccountId:providerAccountId});
     if(!account) throw new NotFoundError("Account")
     return NextResponse.json(
-      { sucess: true, data: account},
+      { success: true, data: account},
       { status: 201 },
     );
   } catch (error) {

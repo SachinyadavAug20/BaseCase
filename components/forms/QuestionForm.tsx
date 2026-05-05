@@ -1,28 +1,45 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, DefaultValues, FieldValue, Path, SubmitHandler, useForm, } from "react-hook-form";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import {
+  Controller,
+  DefaultValues,
+  FieldValue,
+  Path,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, } from "@/components/ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { AskQuestionSchema } from "@/lib/validation";
-import { useRef } from "react";
+import { useRef, useTransition } from "react";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import dynamic from "next/dynamic";
-import {z} from "zod";
+import { z } from "zod";
 import TagCard from "../card/TagCard";
+import { createQuestion } from "@/lib/actions/question.action";
+import { useRouter } from "next/navigation";
+import ROUTES from "@/constant/routes";
 
-const Editor = dynamic(() => import('@/components/editor'), {
+const Editor = dynamic(() => import("@/components/editor"), {
   // Make sure we turn SSR off
-  ssr: false
-})
-
-
+  ssr: false,
+});
 
 const QuestionForm = () => {
-const editorred=useRef<MDXEditorMethods>(null)
+  const router = useRouter();
+  const editorred = useRef<MDXEditorMethods>(null);
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof AskQuestionSchema>>({
     resolver: zodResolver(AskQuestionSchema),
@@ -32,40 +49,63 @@ const editorred=useRef<MDXEditorMethods>(null)
       tags: [],
     },
   });
-  const handleInputTags=(e:React.KeyboardEvent<HTMLInputElement>,field:{value:string[]})=>{
-    if(e.key==="Enter"){
-      e.preventDefault();// privents the enter key from submitting the form
-      const tagInput=e.currentTarget.value.trim();
-      if(tagInput && tagInput.length<=15 && !field.value.includes(tagInput)){
-        form.setValue('tags',[...field.value,tagInput]);
-        e.currentTarget.value="";
+  const handleInputTags = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    field: { value: string[] },
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // privents the enter key from submitting the form
+      const tagInput = e.currentTarget.value.trim();
+      if (
+        tagInput &&
+        tagInput.length <= 15 &&
+        !field.value.includes(tagInput)
+      ) {
+        form.setValue("tags", [...field.value, tagInput]);
+        e.currentTarget.value = "";
         form.clearErrors("tags");
-      }else if(tagInput.length>15){
-        form.setError('tags',{
-          type:"manual",
-          message:"Tag must be less than 15 characters",
-        })
-      }else if(field.value.includes(tagInput)){
-        form.setError("tags",{
-          type:"manual",
-          message:"Tag already exists"
-        })
+      } else if (tagInput.length > 15) {
+        form.setError("tags", {
+          type: "manual",
+          message: "Tag must be less than 15 characters",
+        });
+      } else if (field.value.includes(tagInput)) {
+        form.setError("tags", {
+          type: "manual",
+          message: "Tag already exists",
+        });
       }
     }
-  }
-  const handleRemoveTag=(tag:string,field:{value:string[]})=>{
-    const newTags=field.value.filter((t)=>t!==tag)
-    form.setValue('tags',newTags);
-    if(newTags.length===0){
-      form.setError("tags",{
-        type:"manual",
-        message:"At least one tag is required"
-      })
+  };
+  const handleRemoveTag = (tag: string, field: { value: string[] }) => {
+    const newTags = field.value.filter((t) => t !== tag);
+    form.setValue("tags", newTags);
+    if (newTags.length === 0) {
+      form.setError("tags", {
+        type: "manual",
+        message: "At least one tag is required",
+      });
     }
-  }
+  };
 
-  const handleCreateQuestion = (data:z.infer<typeof AskQuestionSchema>) => {
-    console.log(data);
+  const handleCreateQuestion = async (
+    data: z.infer<typeof AskQuestionSchema>,
+  ) => {
+    startTransition(async () => {
+      const result = await createQuestion(data);
+      if (result.success) {
+        toast.success("Success", {
+          description: "Question created successfully",
+        });
+        if (result.data) router.push(`${ROUTES.QUESTIONS}/${result.data?._id}`);
+        else {
+          toast(`Error ${result.status}`, {
+            description: result?.error?.message || "Something went wrong",
+          });
+        }
+      }
+      console.log(data);
+    });
   };
 
   return (
@@ -115,7 +155,11 @@ const editorred=useRef<MDXEditorMethods>(null)
                   Detailed explaination of your problem
                   <span className="text-primary-500">*</span>
                 </FieldLabel>
-                  <Editor editorRef={editorred} value={field.value} fieldchange={field.onChange}/>
+                <Editor
+                  editorRef={editorred}
+                  value={field.value}
+                  fieldchange={field.onChange}
+                />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -144,36 +188,57 @@ const editorred=useRef<MDXEditorMethods>(null)
                     autoComplete={field.name}
                     className="paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 no-focus min-h-[56px] border"
                     placeholder="Add tags..."
-                    onKeyDown={(e)=>{handleInputTags(e,field)}}
+                    onKeyDown={(e) => {
+                      handleInputTags(e, field);
+                    }}
                   />
                   <div className="flex-start mt-2.5 flex-wrap gap-2.5">
-                  {field.value.length>0 &&  field.value.map((tag:string)=>{
-                    return <TagCard key={tag} _id={tag} name={tag} compact remove={true} isButton handleRemove={()=>{handleRemoveTag(tag,field)}}/>
-                  })}
+                    {field.value.length > 0 &&
+                      field.value.map((tag: string) => {
+                        return (
+                          <TagCard
+                            key={tag}
+                            _id={tag}
+                            name={tag}
+                            compact
+                            remove={true}
+                            isButton
+                            handleRemove={() => {
+                              handleRemoveTag(tag, field);
+                            }}
+                          />
+                        );
+                      })}
                   </div>
                 </div>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
                 <FieldDescription className="body-regular text-light-500 mt-2.5">
-                Add upto 3 tags to describe what your question is about. You need to press enter to add a tag.
+                  Add upto 3 tags to describe what your question is about. You
+                  need to press enter to add a tag.
                 </FieldDescription>
               </Field>
             )}
           />
         </FieldGroup>
-      <div className=" flex justify-end mt-16">
+        <div className=" flex justify-end mt-16">
           <Button
             type="submit"
             form="form-rhf-input"
-            disabled={form.formState.isSubmitted}
+            disabled={isPending}
             className="primary-gradient !text-light-900 w-fit px-5 py-1"
           >
-
-            {" "}
-            Ask a question
+            {isPending ? (
+              <>
+                <ReloadIcon className="mr-r-2 size-4 animate-spin" />
+                <span>Submitting</span>
+              </>
+            ) : (
+              <> Ask a question</>
+            )}
           </Button>
-      </div>
+        </div>
       </form>
     </>
   );

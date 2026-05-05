@@ -1,7 +1,7 @@
 "use server";
 
 import { createQuestionParams } from "@/types/action";
-import { ActionResponse, ErrorResponse } from "@/types/global";
+import { ActionResponse, ErrorResponse, IQuestion } from "@/types/global";
 import action from "../handlers/action";
 import { AskQuestionSchema } from "../validation";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
@@ -14,7 +14,7 @@ import TagQuestion from "@/dataBase/tag-question.model";
 
 export async function createQuestion(
   params: createQuestionParams,
-): Promise<ActionResponse> {
+): Promise<ActionResponse<IQuestion>> {
   const validationResult = await action({
     params,
     schema: AskQuestionSchema,
@@ -23,20 +23,21 @@ export async function createQuestion(
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
-  const userId=validationResult?.session?.user;
+  console.log("validationResult",validationResult);
+  const userId=validationResult?.session?.user?.id;
   const { title, content, tags } = validationResult.params!;
   // as need to update tag count and ref so need to start transaction
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    const [newQuestion] = await Question.create([{ title, content, tags,author:userId }], { session });
+    const [newQuestion] = await Question.create([{ title, content,author:userId }], { session });
     if(!newQuestion) throw new Error("Failed to create question");
     const tagIds:mongoose.Types.ObjectId[]=[];
     const tagQuestionDocuments=[];
     for(const tag of tags){
       const existingTag=await Tag.findOneAndUpdate(
         {name:{$regex:new RegExp(`^${tag}$`,"i")}}, // serarch by name case insensitive
-        {$setOnInsert:{name:tag},$inc:{question:1}},// if not found create and if fount increment question by 1
+        {$setOnInsert:{name:tag},$inc:{questions:1}},// if not found create and if fount increment question by 1
         {upsert:true,new:true,session});// optional params
         tagIds.push(existingTag._id);
         tagQuestionDocuments.push({

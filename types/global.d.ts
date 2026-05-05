@@ -9,7 +9,7 @@ interface Author {
   name: string;
   image?: string;
 }
-interface Question {
+interface IQuestion {
   _id: string;
   title: string;
   description: string;
@@ -35,3 +35,9 @@ type ErrorResponse = ActionResponse<undefined> & { success: false };
 
 type APIErrorResponse = NextResponse<ErrorResponse>;
 type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
+
+interface RouteParamas{
+  params: Promise<Record<string,string>>;
+  searchParams: Promise<Record<string,string>>
+}
+// Record<string,string> means key value pair of string:string

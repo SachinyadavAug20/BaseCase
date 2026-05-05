@@ -1,7 +1,9 @@
-const page = async({params}:{pramas:{id:string}}) => {
+import { RouteParamas } from "@/types/global"
+
+const page = async ({params}:RouteParamas) => {
   const {id}=await params;
   return (
-    <div>{id}</div>
+    <div>Question Details {id}</div>
   )
 }
 

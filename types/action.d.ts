@@ -14,3 +14,10 @@ export interface createQuestionParams{
   content:string,
   tags:string[]
 }
+
+export interface editQuestionParams extends createQuestionParams{
+  questionId:string,
+}
+export interface getQuestionParams{
+  questionId:string,
+}

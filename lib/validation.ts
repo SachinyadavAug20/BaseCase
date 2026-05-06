@@ -74,6 +74,13 @@ export const AskQuestionSchema = z.object({
     .max(5, { message: "Maximum of 5 tags allowed" }),
 });
 
+export const EditQuestionSchema = AskQuestionSchema.extend({
+  questionId: z.string().min(1, { message: "Question ID is required" }),
+})
+export const getQuestionSchema = z.object({
+  questionId: z.string().min(1, { message: "Question ID is required" }),
+})
+
 export const UserSchema = z.object({
   // making same as DB schema
   name: z

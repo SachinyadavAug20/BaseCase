@@ -21,22 +21,27 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { AskQuestionSchema } from "@/lib/validation";
+import { AskQuestionSchema, EditQuestionSchema } from "@/lib/validation";
 import { useRef, useTransition } from "react";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import dynamic from "next/dynamic";
 import { z } from "zod";
 import TagCard from "../card/TagCard";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { useRouter } from "next/navigation";
 import ROUTES from "@/constant/routes";
+import { IQuestion } from "@/types/global";
 
 const Editor = dynamic(() => import("@/components/editor"), {
   // Make sure we turn SSR off
   ssr: false,
 });
+interface Params {
+  question?: IQuestion;
+  isEdit?: boolean;
+}
 
-const QuestionForm = () => {
+const QuestionForm = ({ question, isEdit = false }: Params) => {
   const router = useRouter();
   const editorred = useRef<MDXEditorMethods>(null);
   const [isPending, startTransition] = useTransition();
@@ -44,9 +49,9 @@ const QuestionForm = () => {
   const form = useForm<z.infer<typeof AskQuestionSchema>>({
     resolver: zodResolver(AskQuestionSchema),
     defaultValues: {
-      title: "",
-      content: "",
-      tags: [],
+      title: question?.title || "",
+      content: question?.content || "",
+      tags: question?.tags.map((tag) => tag.name) || [],
     },
   });
   const handleInputTags = (
@@ -92,19 +97,39 @@ const QuestionForm = () => {
     data: z.infer<typeof AskQuestionSchema>,
   ) => {
     startTransition(async () => {
-      const result = await createQuestion(data);
-      if (result.success) {
-        toast.success("Success", {
-          description: "Question created successfully",
+      if (isEdit && question) {
+        const result = await editQuestion({
+          title: data.title,
+          content: data.content,
+          tags: data.tags,
+          questionId: question?._id,
         });
-        if (result.data) router.push(`${ROUTES.QUESTIONS}/${result.data?._id}`);
-        else {
+        if (result.success) {
+          toast.success("Success", {
+            description: "Question updated successfully",
+          });
+          if (result.data)
+            router.push(`${ROUTES.QUESTIONS}/${result.data?._id}`);
+        } else {
           toast(`Error ${result.status}`, {
             description: result?.error?.message || "Something went wrong",
           });
         }
+      } else {
+        const result = await createQuestion(data);
+        if (result.success) {
+          toast.success("Success", {
+            description: "Question created successfully",
+          });
+          if (result.data)
+            router.push(`${ROUTES.QUESTIONS}/${result.data?._id}`);
+        } else {
+          toast(`Error ${result.status}`, {
+            description: result?.error?.message || "Something went wrong",
+          });
+        }
+        console.log(data);
       }
-      console.log(data);
     });
   };
 
@@ -235,7 +260,7 @@ const QuestionForm = () => {
                 <span>Submitting</span>
               </>
             ) : (
-              <> Ask a question</>
+              <> {isEdit?"Edit Question":"Ask a Question"}</>
             )}
           </Button>
         </div>

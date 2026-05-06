@@ -12,7 +12,7 @@ interface Author {
 interface IQuestion {
   _id: string;
   title: string;
-  description: string;
+  content: string;
   tags: Tags[];
   author: Author;
   upvotes: number;

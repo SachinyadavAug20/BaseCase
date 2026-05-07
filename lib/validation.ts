@@ -1,3 +1,4 @@
+import { filter } from "@mdxeditor/editor";
 import z from "zod";
 
 export const SignInSchema = z.object({
@@ -153,3 +154,12 @@ export const SigInWithOAuthSchema=z.object({
     image:z.string().url({message:"Enter a valid image URL"}).optional(),
   })
 })
+
+export const PaginatedSearchParamsSchema = UserSchema.extend({
+  page: z.number().int().positive().default(1),
+  pageSize:z.number().int().positive().default(10),
+  query:z.string().optional(),
+  filter:z.string().optional(),
+  sort:z.string().optional(),
+})
+

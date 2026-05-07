@@ -1,5 +1,6 @@
 import mongoose, { Mongoose } from "mongoose";
 import logger from "./logger";
+import "@/dataBase"; // pre-load models
 
 const MONGODB_URL = process.env.MONGODB_URI as string;
 

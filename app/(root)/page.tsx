@@ -4,22 +4,18 @@ import Link from "next/link";
 import LocalSearch from "@/components/search/LocalSearch";
 import HomeFilter from "@/components/filters/HomeFilter";
 import QuestionCard from "@/components/card/QuestionCard";
+import { getQuestions } from "@/lib/actions/question.action";
+import { error } from "console";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 
 export default async function Home({ searchParams }: SearchParams) {
-  const { query, filter } = await searchParams;
-  const filteredQuestions = questions.filter((question) => {
-    const matchesQuery = question.title
-      .toLowerCase()
-      .includes(query?.toLowerCase());
-    const matchesFilter = filter
-      ? question.tags[0].name.toLowerCase() === filter.toLowerCase()
-      : true;
-    return matchesQuery && matchesFilter;
-  });
+  const {page,pageSize,query,filter}=await searchParams // are from url so strings
+  const {success,data}=await getQuestions({page:Number(page)||1,pageSize:Number(pageSize)||10,query:query||"",filter:filter||""});
+  const {questions}=data||{}
+  
 
   return (
     <>
@@ -42,13 +38,26 @@ export default async function Home({ searchParams }: SearchParams) {
         />
       </section>
       <HomeFilter />
+      {success?(
+
       <div className="mt-10 flex w-full flex-col gap-6">
-        {filteredQuestions.map((q) => (
+        {questions && questions.length>0 ?questions.map((q) => (
           <div key={q._id}>
             <QuestionCard question={q} />
           </div>
-        ))}
+        )) : (
+        <div className="mt-10 flex w-full items-center justify-center">
+          <p className="text-dark400_light700 ">No Question found</p>
+        </div>
+        )}
       </div>
-    </>
+      ):(
+      <div className="m-10 flex w-full items-center justify-center">
+        <p className="text-dark400_light700">
+          { "Failed to get questions" }
+        </p>
+      </div>
+      )}
+</>
   );
 }

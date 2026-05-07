@@ -5,8 +5,9 @@ import { string } from "zod";
 import TagCard from "./TagCard";
 import Metric from "../ui/Metric";
 import { auth } from "@/auth";
+import { IQuestion } from "@/types/global";
 
-const QuestionCard = ({ question: { _id, title, tags, author, createdAt, upvotes, downvotes, answers, views, description, }, }: { question: Question; }) => {
+const QuestionCard = ({ question: { _id, title,content, tags, author, createdAt, upvotes, downvotes, answers, views, }, }: { question:IQuestion; }) => {
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
       <div className="flex flex-col-reverse items-start gap-4 sm:flex-row sm:items-center">

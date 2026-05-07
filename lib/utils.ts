@@ -10,8 +10,9 @@ export const getDeviconsClassName=(techName:string)=>{
   return getDevIcon(techName)
 }
 
-export const getsTimeStamp = (date: Date): string => {
-  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+export const getsTimeStamp = (date: Date | string): string => {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const seconds = Math.floor((Date.now() - dateObj.getTime()) / 1000);
 
   const units = [
     { label: "year", value: 365 * 24 * 60 * 60 },

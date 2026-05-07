@@ -21,7 +21,7 @@ import {
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import handleError from "../handlers/error";
 import mongoose, { FilterQuery, Mongoose } from "mongoose";
-import Question from "@/dataBase/question.model";
+import Question, { IQuestionDoc } from "@/dataBase/question.model";
 import { throws } from "assert";
 import Tag, { ITag, ITagDoc } from "@/dataBase/tag.model";
 import TagQuestion from "@/dataBase/tag-question.model";
@@ -85,7 +85,7 @@ export async function createQuestion(
 
 export async function editQuestion(
   params: editQuestionParams,
-): Promise<ActionResponse<IQuestion>> {
+): Promise<ActionResponse<IQuestionDoc>> {
   const validationResult = await action({
     params,
     schema: EditQuestionSchema,
@@ -108,18 +108,19 @@ export async function editQuestion(
     if (question.title !== title) question.title = title;
     if (question.content !== content) question.content = content;
     await question.save({ session });
+
     const tagstoAdd = tags.filter(
-      (tag) => !question.tags.includes(tag.toLowerCase()),
+      (tag) => !question.tags.some((t:ITagDoc)=>t.name.toLowerCase().includes(tag.toLowerCase())),
     );
     const tagstoRemove = question.tags.filter(
-      (tag: ITagDoc) => !tags.includes(tag.name.toLowerCase()),
+      (tag: ITagDoc) => !tags.some((t)=>t.toLowerCase()===tag.name.toLowerCase()),
     );
 
     const newTagDocument = [];
     if (tagstoAdd.length > 0) {
       for (const tag of tagstoAdd) {
         const existingTag = await Tag.findOneAndUpdate(
-          { name: { $regex: new RegExp(`^${tag}$`, "i") } },
+          { name: { $regex: `^${tag}$`,$options: "i" } },
           { $setOnInsert: { name: tag }, $inc: { questions: 1 } },
           { upsert: true, new: true, session },
         );
@@ -141,7 +142,7 @@ export async function editQuestion(
         { session },
       );
       question.tags = question.tags.filter(
-        (tagId: mongoose.Types.ObjectId) => !tagstoRemove.includes(tagId),
+        (tag: mongoose.Types.ObjectId) => !tagIdsToRemove.some((id:mongoose.Types.ObjectId)=>id.equals(tag._id)),
       );
     }
     if (newTagDocument.length > 0) {

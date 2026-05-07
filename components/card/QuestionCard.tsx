@@ -37,7 +37,7 @@ const QuestionCard = ({ question: { _id, title,content, tags, author, createdAt,
       </div>
       <div className="flex-between gap-3 mt-6 w-full flex-wrap">
         <Metric
-          imgUrl={author.image}
+          imgUrl={author.image || "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.icon-icons.com%2F1378%2FPNG%2F512%2Favatardefault_92824.png&f=1&nofb=1&ipt=529ae9117efd92205b685407e6c513cbde90d2b585c3c35c921b44eac5cfa9c1"}
           alt={author.name}
           value={author.name}
           title={` • asked ${getsTimeStamp(createdAt)} Ago`}

@@ -110,17 +110,21 @@ export async function editQuestion(
     await question.save({ session });
 
     const tagstoAdd = tags.filter(
-      (tag) => !question.tags.some((t:ITagDoc)=>t.name.toLowerCase().includes(tag.toLowerCase())),
+      (tag) =>
+        !question.tags.some((t: ITagDoc) =>
+          t.name.toLowerCase().includes(tag.toLowerCase()),
+        ),
     );
     const tagstoRemove = question.tags.filter(
-      (tag: ITagDoc) => !tags.some((t)=>t.toLowerCase()===tag.name.toLowerCase()),
+      (tag: ITagDoc) =>
+        !tags.some((t) => t.toLowerCase() === tag.name.toLowerCase()),
     );
 
     const newTagDocument = [];
     if (tagstoAdd.length > 0) {
       for (const tag of tagstoAdd) {
         const existingTag = await Tag.findOneAndUpdate(
-          { name: { $regex: `^${tag}$`,$options: "i" } },
+          { name: { $regex: `^${tag}$`, $options: "i" } },
           { $setOnInsert: { name: tag }, $inc: { questions: 1 } },
           { upsert: true, new: true, session },
         );
@@ -131,7 +135,9 @@ export async function editQuestion(
       }
     }
     if (tagstoRemove.length > 0) {
-      const tagIdsToRemove = tagstoRemove.map((tag: ITagDoc) => tag._id);
+      const tagIdsToRemove = tagstoRemove.map(
+        (tag: mongoose.Types.ObjectId) => tag._id,
+      );
       await Tag.updateMany(
         { _id: { $in: tagIdsToRemove } },
         { $inc: { questions: -1 } },
@@ -142,7 +148,10 @@ export async function editQuestion(
         { session },
       );
       question.tags = question.tags.filter(
-        (tag: mongoose.Types.ObjectId) => !tagIdsToRemove.some((id:mongoose.Types.ObjectId)=>id.equals(tag._id)),
+        (tag: mongoose.Types.ObjectId) =>
+          !tagIdsToRemove.some((id: mongoose.Types.ObjectId) =>
+            id.equals(tag._id),
+          ),
       );
     }
     if (newTagDocument.length > 0) {
@@ -203,7 +212,6 @@ export async function getQuestions(
     filterQuery.$or = [
       { title: { $regex: query, $options: "i" } },
       { content: { $regex: query, $options: "i" } },
-      { tags: { $regex: query, $options: "i" } },
     ];
   }
   let sortCriteria = {};

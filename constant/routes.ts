@@ -9,6 +9,7 @@ const ROUTES = {
   ASKQUESTION:"/ask-question",
   QUESTIONS:"/questions",
   TAGS:"/tags",
+  TAG:"/tag",
   FORGOT_PASSWORD: "/forgot-password",
   RESET_PASSWORD: "/reset-password",
   VERIFY_EMAIL: "/verify-email",

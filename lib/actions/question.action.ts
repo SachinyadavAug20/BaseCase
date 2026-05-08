@@ -18,16 +18,12 @@ import {
   getQuestionSchema,
   PaginatedSearchParamsSchema,
 } from "../validation";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import handleError from "../handlers/error";
-import mongoose, { FilterQuery, Mongoose } from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 import Question, { IQuestionDoc } from "@/dataBase/question.model";
-import { throws } from "assert";
 import Tag, { ITag, ITagDoc } from "@/dataBase/tag.model";
 import TagQuestion from "@/dataBase/tag-question.model";
 import { NotFoundError } from "../http-error";
-import { TypeOf } from "zod";
-import { SofaIcon } from "lucide-react";
 
 export async function createQuestion(
   params: createQuestionParams,
@@ -181,7 +177,6 @@ export async function getQuestion(
   }
   console.log("validationResult", validationResult);
   const { questionId } = validationResult.params!;
-  const userId = validationResult?.session?.user?.id;
   try {
     const question = await Question.findById(questionId).populate("tags");
     if (!question) throw new NotFoundError("Question");

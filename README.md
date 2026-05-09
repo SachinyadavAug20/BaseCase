@@ -58,9 +58,13 @@ as of 2-5-2026 : Blue theme and name
 
 ![screenshot](Documentation/screenshots/13.png)  
 
-as of 8-5-2026 : Blue theme and name
+as of 8-5-2026 : state of data fetch
 
 ![screenshot](Documentation/screenshots/14.png)  
+
+as of 9-5-2026 : Displaying tags on /tags page
+
+![screenshot](Documentation/screenshots/15.png)  
 
 #### Todos
 

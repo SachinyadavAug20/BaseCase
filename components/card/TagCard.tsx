@@ -28,7 +28,6 @@ const TagCard = ({
   handleRemove,
 }: Props) => {
   const iconClass = getDeviconsClassName(name);
-  console.log("ICONCLASS : ",iconClass);
   const iconDesc = getTechDescription(name);
   const TagBody = (
     <>

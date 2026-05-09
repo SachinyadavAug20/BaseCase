@@ -3,7 +3,7 @@ import DataRenderer from "@/components/DataRenderer";
 import LocalSearch from "@/components/search/LocalSearch";
 import ROUTES from "@/constant/routes";
 import { EMPTY_TAGS } from "@/constant/states";
-import { getTags } from "@/lib/actions/tag.actions";
+import { getTags } from "@/lib/actions/tag.action";
 import { RouteParamas } from "@/types/global";
 
 const page = async ({ searchParams }: RouteParamas) => {

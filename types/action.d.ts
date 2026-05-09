@@ -1,3 +1,4 @@
+import {PaginatedSearchParams} from 'types/global'
 export interface SignInWithOAuthParams{
   provider:'github'|'google'|'apple',
   providerAccountId:string,
@@ -20,4 +21,7 @@ export interface editQuestionParams extends createQuestionParams{
 }
 export interface getQuestionParams{
   questionId:string,
+}
+export interface GetTagQuestionParams extends Omit<PaginatedSearchParams,'filter'>{
+  tagId:string;
 }

@@ -1,4 +1,6 @@
+
 import {PaginatedSearchParams} from 'types/global'
+
 export interface SignInWithOAuthParams{
   provider:'github'|'google'|'apple',
   providerAccountId:string,

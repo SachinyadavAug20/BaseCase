@@ -10,10 +10,10 @@ interface Props {
   placeholder: string;
   route: string;
   otherClasses?: string;
-  iconsPosition?: string;
+  iconsPosition?: "left" | "right"
 }
 
-const LocalSearch = ({ imgSrc, placeholder, route, otherClasses, iconsPosition, }: Props) => {
+const LocalSearch = ({ imgSrc, placeholder, route, otherClasses, iconsPosition='left' }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParmas=useSearchParams()
@@ -60,8 +60,8 @@ const LocalSearch = ({ imgSrc, placeholder, route, otherClasses, iconsPosition, 
         <Image 
           src={imgSrc}
           alt="search icon"
-          width={24}
-          height={24}
+          width={15}
+          height={15}
           className="cursor-pointer"
         />
       )}

@@ -10,6 +10,7 @@ export const getDeviconsClassName=(techName:string)=>{
   return getDevIcon(techName)
 }
 
+
 export const getsTimeStamp = (date: Date | string): string => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   const seconds = Math.floor((Date.now() - dateObj.getTime()) / 1000);

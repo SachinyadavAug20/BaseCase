@@ -31,7 +31,9 @@ const TagCard = ({
     <>
       <Badge className="subtle-medium background-light900_dark300! text-dark500_light700! rounded-md border-none px-2 py-3 uppercase flex flex-row gap-2">
         <div className="flex-center space-x-2 ">
+        {iconClass &&
           <i className={`${iconClass} text-sm`}></i>
+        }
           <span>{name}</span>
         </div>
         {remove && (

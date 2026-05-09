@@ -1,6 +1,7 @@
-const page = async (params:Promise<{userId:string}>) => {
-  const {userId}=await params;
+import { RouteParamas } from "@/types/global";
 
+const page = async ({params}:RouteParamas) => {
+  const {userId}=await params;
 
   return (
     <div>Profile {userId}</div>

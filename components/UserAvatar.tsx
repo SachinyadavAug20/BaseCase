@@ -9,8 +9,9 @@ interface Props {
   name: string;
   imageUrl?: string|null;
   className?: string;
+  fallbackclassName?:string
 }
-const UserAvatar = ({ id, name, imageUrl, className = "h-9 w-9" }: Props) => {
+const UserAvatar = ({ id, name, imageUrl, className = "h-9 w-9",fallbackclassName }: Props) => {
   const initials=name.split(" ").map((word)=>word[0]).join("").toUpperCase().slice(0,2)
   return (
     <Link href={`${ROUTES.PROFILE}/${id}`}>
@@ -25,7 +26,7 @@ const UserAvatar = ({ id, name, imageUrl, className = "h-9 w-9" }: Props) => {
         />
         <AvatarFallback>{name}</AvatarFallback></>
       ) : (
-        <AvatarFallback className="primary-gradient rounded-full w-9 h-9 text-center pt-1 font-logofont font-bold tracking-wider text-white">{initials}</AvatarFallback>
+        <AvatarFallback className={`primary-gradient ${fallbackclassName} rounded-full w-9 h-9 text-center pt-1 font-logofont font-bold tracking-wider text-white`}>{initials}</AvatarFallback>
       )}
       </Avatar>
     </Link>

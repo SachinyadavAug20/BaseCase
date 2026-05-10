@@ -7,27 +7,27 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --basecase-blue-dark: #1D4ED8;    
-  --basecase-blue-main: #2563EB;    
-  --basecase-blue-light: #60A5FA; 
+  --basecase-blue-dark: #1d4ed8;
+  --basecase-blue-main: #2563eb;
+  --basecase-blue-light: #60a5fa;
 
-  --color-primary-100: #EFF6FF;     
-  --color-primary-500: var(--basecase-blue-dark); 
+  --color-primary-100: #eff6ff;
+  --color-primary-500: var(--basecase-blue-dark);
 
-  --color-dark-100: #000000;       
-  --color-dark-200: #0A0C10;       
-  --color-dark-300: #12151B;        
-  --color-dark-400: #1D2129;       
-  --color-dark-500: #101012;       
+  --color-dark-100: #000000;
+  --color-dark-200: #0a0c10;
+  --color-dark-300: #12151b;
+  --color-dark-400: #1d2129;
+  --color-dark-500: #101012;
 
-  --color-light-400: #6B728E;       
-  --color-light-500: #7C89A3;       
-  --color-light-700: #E0E7FF;       
-  --color-light-800: #F3F4F6;       
-  --color-light-850: #F9FAFB;       
-  --color-light-900: #FFFFFF;       
+  --color-light-400: #6b728e;
+  --color-light-500: #7c89a3;
+  --color-light-700: #e0e7ff;
+  --color-light-800: #f3f4f6;
+  --color-light-850: #f9fafb;
+  --color-light-900: #ffffff;
 
-  --color-link-100: var(--basecase-blue-main); 
+  --color-link-100: var(--basecase-blue-main);
 
   --radius-2: 8px;
   --radius-1_5: 6px;
@@ -65,6 +65,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -72,12 +73,15 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
   }
+
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
   }
@@ -287,38 +291,28 @@
   @apply shadow-light-100 dark:shadow-none;
 }
 
-
-
-
 @utility primary-gradient {
-  background: linear-gradient(129deg, #2563EB 0%, #60A5FA 100%);
+  background: linear-gradient(129deg, #2563eb 0%, #60a5fa 100%);
 }
 
 @utility dark-gradient {
-  background: linear-gradient(
-    232deg,
-    rgba(15, 17, 23, 0.6) 0%,
-    rgba(10, 12, 16, 0.9) 100%
-  );
+  background: linear-gradient(232deg,
+      rgba(15, 17, 23, 0.6) 0%,
+      rgba(10, 12, 16, 0.9) 100%);
 }
 
 @utility light-gradient {
-  background: linear-gradient(
-    132deg,
-    rgba(239, 246, 255, 0.8) 0%,
-    rgba(219, 234, 254, 0.4) 100%
-  );
+  background: linear-gradient(132deg,
+      rgba(239, 246, 255, 0.8) 0%,
+      rgba(219, 234, 254, 0.4) 100%);
 }
 
 @utility primary-text-gradient {
-  background: linear-gradient(129deg, #1D4ED8 0%, #60A5FA 100%);
+  background: linear-gradient(129deg, #1d4ed8 0%, #60a5fa 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-
-
-
 
 @utility flex-center {
   @apply flex justify-center items-center;
@@ -353,7 +347,7 @@
 }
 
 @utility markdown {
-  @applymax-w-full prose prose-p:my-2 prose-ol:my-0 prose-ul:my-0 dark:prose-p:text-light-700 dark:prose-ol:text-light-700 dark:prose-ul:text-light-500 dark:prose-strong:text-white dark:prose-headings:text-white prose-headings:text-dark-400 prose-h1:text-dark-300 prose-h2:text-dark-300 prose-p:text-dark-500 prose-ul:text-dark-500 prose-ol:text-dark-500;
+  @apply max-w-full prose prose-p:my-2 prose-ol:my-0 prose-ul:my-0 dark:prose-p:text-light-900 dark:prose-ol:text-light-900 dark:prose-ul:text-light-900 dark:prose-strong:text-white dark:prose-headings:text-white prose-headings:text-dark-400 prose-h1:text-dark-300 prose-h2:text-dark-300 prose-p:text-dark-500 prose-ul:text-dark-500 prose-ol:text-dark-500;
 }
 
 @utility markdown-editor {
@@ -361,7 +355,7 @@
 }
 
 @utility tab {
-  @apply min-h-full dark:bg-dark-400 bg-light-800 text-light-500 dark:data-[state=active]:bg-dark-300  data-[state=active]:bg-primary-100  data-[state=active]:text-primary-500;
+  @apply min-h-full dark:bg-dark-400 bg-light-800 text-light-500 dark:data-[state=active]:bg-dark-300 data-[state=active]:bg-primary-100 data-[state=active]:text-primary-500;
 }
 
 @layer base {
@@ -403,8 +397,7 @@
 }
 
 .active-theme {
-  filter: invert(53%) sepia(98%) saturate(3332%) hue-rotate(0deg)
-    brightness(104%) contrast(106%) important;
+  filter: invert(53%) sepia(98%) saturate(3332%) hue-rotate(0deg) brightness(104%) contrast(106%) important;
 }
 
 .hash-span {
@@ -483,6 +476,7 @@ code {
   display: gridimportant;
   width: 100%important;
 }
+
 /*
   ---break---
 */
@@ -528,6 +522,7 @@ code {
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 }
+
 /*
   ---break---
 */
@@ -565,6 +560,7 @@ code {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
 }
+
 /*
   ---break---
 */

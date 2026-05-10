@@ -1,18 +1,21 @@
 import TagCard from "@/components/card/TagCard";
+import Preview from "@/components/editor/preview";
 import Metric from "@/components/ui/Metric";
 import UserAvatar from "@/components/UserAvatar";
-import { sampleQuestion } from "@/constant";
 import ROUTES from "@/constant/routes";
-import { Answers } from "@/dataBase";
-import { ITag } from "@/dataBase/tag.model";
+import { getQuestion } from "@/lib/actions/question.action";
 import { formatNumber, getsTimeStamp } from "@/lib/utils";
 import { RouteParamas } from "@/types/global"
+import { redirect } from "next/navigation";
 import Link from "next/link";
 
 const page = async ({params}:RouteParamas) => {
-  const sameple_question=sampleQuestion
-  const {author,content,createdAt,tags,upvotes,views,title,answers}=sameple_question
   const {id}=await params;
+  const {success,data:question}=await getQuestion({questionId:id})
+  if(!success || !question){
+    return redirect("/404");
+  }
+  const {author,createdAt,content,views,upvotes,downvotes,answers,tags,title}=question!;
 
   return (
     <>
@@ -35,7 +38,9 @@ const page = async ({params}:RouteParamas) => {
       <Metric imgUrl="/icons/message.svg" alt="message icon" value={answers} title="" textStyles="small-regular text-dark400_light700" titleStyles="max-sm:hidden"/>
       <Metric imgUrl="/icons/eye.svg" alt="eye icon" value={formatNumber(views)} title="" textStyles="small-regular text-dark400_light700" titleStyles="max-sm:hidden"/>
     </div>
-    <p>Preview Content</p>
+
+    <Preview content={content}/>
+
     <div className="mt-8 flex flex-wrap gap-2">
       {tags.map((tag)=>(
         <TagCard key={tag._id} _id={tag._id as string} name={tag.name} compact/>

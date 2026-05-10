@@ -22,7 +22,7 @@ const page = async ({params}:RouteParamas) => {
     <div className="flex-start w-full flex-col">
       <div className="flex w-full flex-col-reverse justify-between">
         <div className="flex items-center justify-start gap-1">
-          <UserAvatar id={author._id} name={author.name} className="size-[36px]" fallbackclassName={"text-[18px]"}/>
+          <UserAvatar id={author._id} name={author.name} imageUrl={author?.image} className="size-[36px]" fallbackclassName={"text-[18px]"}/>
           <Link href={`${ROUTES.PROFILE}/${author._id}`}>
             <p className="paragraph-semibold text-dark300_light700">{author.name}</p>
           </Link>

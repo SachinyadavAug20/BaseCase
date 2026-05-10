@@ -175,7 +175,7 @@ export async function getQuestion(
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
-  console.log("validationResult", validationResult);
+  // console.log("validationResult", validationResult);
   const { questionId } = validationResult.params!;
   try {
     const question = await Question.findById(questionId).populate("tags").populate("author","_id name image");

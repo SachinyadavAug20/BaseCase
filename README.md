@@ -66,6 +66,10 @@ as of 9-5-2026 : Displaying tags on /tags page
 
 ![screenshot](Documentation/screenshots/15.png)  
 
+as of 10-5-2026 : UI of questions details page
+
+![screenshot](Documentation/screenshots/16.png)  
+
 #### Todos
 
 Fix the MDX-editor for markdown --> Fixed 

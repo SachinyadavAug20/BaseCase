@@ -5,18 +5,22 @@ import { getQuestion } from "@/lib/actions/question.action";
 import { RouteParamas } from "@/types/global";
 import { notFound, redirect } from "next/navigation";
 
-const page =async ({params}:RouteParamas) => {
-  const {id}=await params;
-  if(!id) return notFound();
-  const session=await auth();
-  if(!session) return redirect(ROUTES.SIGN_IN)
-  const {data:question,success}=await getQuestion({questionId:id})
-  if(!success) return notFound()
-  if(question?.author.toString()!==session?.user?.id) redirect(`${ROUTES.QUESTIONS}/${id}`);
+const page = async ({ params }: RouteParamas) => {
+  const { id } = await params;
+  if (!id) return notFound();
+  const session = await auth();
+  if (!session) return redirect(ROUTES.SIGN_IN);
+  const { data: question, success } = await getQuestion({ questionId: id });
+  if (!success) return notFound();
+  console.log("Q ID", question?.author._id);
+  console.log("A ID", session.user?.id);
+  if (question?.author._id.toString() !== session.user?.id?.toString()) {
+    redirect(`${ROUTES.QUESTIONS}/${id}`);
+  }
 
   return (
     <main>
-        <QuestionForm question={question} isEdit/>
+      <QuestionForm question={question} isEdit />
     </main>
   );
 };

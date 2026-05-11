@@ -4,6 +4,7 @@ import {
   createQuestionParams,
   editQuestionParams,
   getQuestionParams,
+  IncrementViewsParams,
 } from "@/types/action";
 import {
   ActionResponse,
@@ -16,6 +17,7 @@ import {
   AskQuestionSchema,
   EditQuestionSchema,
   getQuestionSchema,
+  IncrementViewsSchema,
   PaginatedSearchParamsSchema,
 } from "../validation";
 import handleError from "../handlers/error";
@@ -24,6 +26,8 @@ import Question, { IQuestionDoc } from "@/dataBase/question.model";
 import Tag, { ITag, ITagDoc } from "@/dataBase/tag.model";
 import TagQuestion from "@/dataBase/tag-question.model";
 import { NotFoundError } from "../http-error";
+import { revalidatePath } from "next/cache";
+import ROUTES from "@/constant/routes";
 
 export async function createQuestion(
   params: createQuestionParams,
@@ -242,4 +246,26 @@ export async function getQuestions(
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
+}
+
+export async function incrementViews(params: IncrementViewsParams):Promise<ActionResponse<{views:number}>>{
+  const validationResult = await action({
+  params,
+  schema:IncrementViewsSchema,
+  })
+  if(validationResult instanceof Error){
+    return handleError(validationResult) as ErrorResponse;
+  }
+  const {questionId}=validationResult.params!;
+  try{
+    const question=await Question.findById(questionId);
+    if(!question) throw new NotFoundError("Question");
+    question.views+=1;
+    await question.save();
+    revalidatePath(`${ROUTES.QUESTIONS}/${questionId}`)
+    return {success:true,data:{views:question.views}}
+  }catch(error){
+    return handleError(error) as ErrorResponse;
+  }
+
 }

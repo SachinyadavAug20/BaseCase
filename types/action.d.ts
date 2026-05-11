@@ -27,3 +27,7 @@ export interface getQuestionParams{
 export interface GetTagQuestionParams extends Omit<PaginatedSearchParams,'filter'>{
   tagId:string;
 }
+
+export interface IncrementViewsParams{
+  questionId:string;
+}

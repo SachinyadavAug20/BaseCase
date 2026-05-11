@@ -8,13 +8,16 @@ import { formatNumber, getsTimeStamp } from "@/lib/utils";
 import { RouteParamas } from "@/types/global";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { after } from 'next/server'
 
 const page = async ({ params }: RouteParamas) => {
   const { id } = await params;
-  const [_,{success,data:question}]=await Promise.all([
-    await incrementViews({ questionId: id }),
-    await getQuestion({ questionId: id }),
-  ]);
+  const {success,data:question}=await getQuestion({questionId:id});
+
+  after(async()=>{
+    await incrementViews({questionId:id}); // it is called after render not blocking
+  })
+
   if (!success || !question) {
     return redirect("/404");
   }

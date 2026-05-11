@@ -262,7 +262,6 @@ export async function incrementViews(params: IncrementViewsParams):Promise<Actio
     if(!question) throw new NotFoundError("Question");
     question.views+=1;
     await question.save();
-    revalidatePath(`${ROUTES.QUESTIONS}/${questionId}`)
     return {success:true,data:{views:question.views}}
   }catch(error){
     return handleError(error) as ErrorResponse;

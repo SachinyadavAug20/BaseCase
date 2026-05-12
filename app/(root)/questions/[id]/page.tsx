@@ -9,6 +9,7 @@ import { RouteParamas } from "@/types/global";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { after } from 'next/server'
+import AnswerForm from "@/components/forms/AnswerForm";
 
 const page = async ({ params }: RouteParamas) => {
   const { id } = await params;
@@ -98,6 +99,9 @@ const page = async ({ params }: RouteParamas) => {
           />
         ))}
       </div>
+      <section className="my-5">
+        <AnswerForm/>
+      </section>
     </>
   );
 };

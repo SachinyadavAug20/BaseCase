@@ -1,3 +1,4 @@
+import { Question } from "@/dataBase";
 import { filter } from "@mdxeditor/editor";
 import z from "zod";
 
@@ -77,11 +78,10 @@ export const AskQuestionSchema = z.object({
 
 export const EditQuestionSchema = AskQuestionSchema.extend({
   questionId: z.string().min(1, { message: "Question ID is required" }),
-})
+});
 export const getQuestionSchema = z.object({
   questionId: z.string().min(1, { message: "Question ID is required" }),
-
-})
+});
 
 export const UserSchema = z.object({
   // making same as DB schema
@@ -138,40 +138,49 @@ export const AccountSchema = z.object({
     .regex(/[0-9]/, { message: "Password must contain at least one number" })
     .regex(/[^a-zA-Z0-9]/, {
       message: "Password must contain at least one special character",
-    }).optional(),
+    })
+    .optional(),
   provider: z.string().min(1, { message: "Provider is required" }),
   providerAccountId: z
     .string()
     .min(1, { message: "Provider Account ID is required" }),
 });
 
-export const SigInWithOAuthSchema=z.object({
-  provider:z.enum(["github","google","apple"]),
-  providerAccountId:z.string().min(1,{message:"Provider Account ID is required"}),
-  user:z.object({
-    name:z.string().min(1,{message:"Username is required"}),
-    username:z.string().min(3,{message:"Username is required"}),
-    email:z.string().email({message:"Please enter a valid email"}),
-    image:z.string().url({message:"Enter a valid image URL"}).optional(),
-  })
-})
+export const SigInWithOAuthSchema = z.object({
+  provider: z.enum(["github", "google", "apple"]),
+  providerAccountId: z
+    .string()
+    .min(1, { message: "Provider Account ID is required" }),
+  user: z.object({
+    name: z.string().min(1, { message: "Username is required" }),
+    username: z.string().min(3, { message: "Username is required" }),
+    email: z.string().email({ message: "Please enter a valid email" }),
+    image: z.string().url({ message: "Enter a valid image URL" }).optional(),
+  }),
+});
 
 export const PaginatedSearchParamsSchema = z.object({
   page: z.number().int().positive().default(1),
-  pageSize:z.number().int().positive().default(10),
-  query:z.string().optional(),
-  filter:z.string().optional(),
-  sort:z.string().optional(),
-})
+  pageSize: z.number().int().positive().default(10),
+  query: z.string().optional(),
+  filter: z.string().optional(),
+  sort: z.string().optional(),
+});
 
-export const GetTagQuestionSchema=PaginatedSearchParamsSchema.extend({
-  tagId:z.string().min(1,{message:"Tag ID is required"}),
-})
+export const GetTagQuestionSchema = PaginatedSearchParamsSchema.extend({
+  tagId: z.string().min(1, { message: "Tag ID is required" }),
+});
 
-export const IncrementViewsSchema=z.object({
-  questionId:z.string().min(1,{message:"Question ID is required"})
-})
+export const IncrementViewsSchema = z.object({
+  questionId: z.string().min(1, { message: "Question ID is required" }),
+});
 
-export const AnswerSchema=z.object({
-  content:z.string().min(100,{message:"Answer must be at least 100 characters"})
-})
+export const AnswerSchema = z.object({
+  content: z
+    .string()
+    .min(100, { message: "Answer must be at least 100 characters" }),
+});
+
+export const AnswerServerSchema = AnswerSchema.extend({
+  questionId: z.string().min(1, { message: "Question ID is required" }),
+});

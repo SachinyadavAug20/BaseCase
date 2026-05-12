@@ -1,6 +1,5 @@
 import { model,Schema,models, Types } from "mongoose";
 
-
 export interface IAnswers {
   author:Types.ObjectId
   question:Types.ObjectId
@@ -8,6 +7,8 @@ export interface IAnswers {
   upvotes:number
   downvotes:number
 }
+
+export interface IAnswerDoc extends IAnswers,Document{}
 
 const AnswersSchema = new Schema<IAnswers>({
   author:{type:Schema.Types.ObjectId,ref:"User",require:true},

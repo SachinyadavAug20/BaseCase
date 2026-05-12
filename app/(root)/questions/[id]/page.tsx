@@ -99,8 +99,11 @@ const page = async ({ params }: RouteParamas) => {
           />
         ))}
       </div>
+      <div>
+        
+      </div>
       <section className="my-5">
-        <AnswerForm/>
+        <AnswerForm questionId={id}/>
       </section>
     </>
   );

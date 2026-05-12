@@ -1,4 +1,3 @@
-
 import {PaginatedSearchParams} from 'types/global'
 
 export interface SignInWithOAuthParams{
@@ -30,4 +29,9 @@ export interface GetTagQuestionParams extends Omit<PaginatedSearchParams,'filter
 
 export interface IncrementViewsParams{
   questionId:string;
+}
+
+export interface CreateAnswerParams{
+  questionId:string,
+  content:string
 }

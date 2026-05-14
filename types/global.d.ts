@@ -21,6 +21,14 @@ interface IQuestion {
   views: number;
   createdAt: Date;
 }
+
+interface IAnswer {
+  _id: string;
+  content: string;
+  author: Author;
+  createdAt: Date;
+}
+
 type ActionResponse<T = null> = {
   success: boolean;
   data?: T;
@@ -41,7 +49,7 @@ interface RouteParamas{
   searchParams: Promise<Record<string,string>>
 }
 
-export interface PaginatedSearchParams{
+interface PaginatedSearchParams{
   page?:number,
   pageSize?:number;
   query?:string;

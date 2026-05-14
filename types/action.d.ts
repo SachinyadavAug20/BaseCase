@@ -35,3 +35,12 @@ export interface CreateAnswerParams{
   questionId:string,
   content:string
 }
+
+export interface GetAnswersParams{
+  page?:number,
+  pageSize?:number;
+  query?:string;
+  filter?:string;
+  sort?:string;
+  questionId:string
+}

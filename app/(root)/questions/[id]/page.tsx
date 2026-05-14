@@ -8,20 +8,28 @@ import { formatNumber, getsTimeStamp } from "@/lib/utils";
 import { RouteParamas } from "@/types/global";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { after } from 'next/server'
+import { after } from "next/server";
 import AnswerForm from "@/components/forms/AnswerForm";
+import { GetAnswers } from "@/lib/actions/answer.action";
 
 const page = async ({ params }: RouteParamas) => {
   const { id } = await params;
-  const {success,data:question}=await getQuestion({questionId:id});
+  const { success, data: question } = await getQuestion({ questionId: id });
 
-  after(async()=>{
-    await incrementViews({questionId:id}); // it is called after render not blocking
-  })
+  after(async () => {
+    await incrementViews({ questionId: id }); // it is called after render not blocking
+  });
 
   if (!success || !question) {
     return redirect("/404");
   }
+  const { pageSize, filter, page } = await params;
+  const {
+    success: areAnswerloaded,
+    data: answerResult,
+    error: answerError,
+  } = await GetAnswers({ page:page?Number(page):1, pageSize:pageSize?Number(pageSize):10, filter, questionId: id });
+  console.log(answerResult);
   const {
     author,
     createdAt,
@@ -99,11 +107,9 @@ const page = async ({ params }: RouteParamas) => {
           />
         ))}
       </div>
-      <div>
-        
-      </div>
+      <div></div>
       <section className="my-5">
-        <AnswerForm questionId={id}/>
+        <AnswerForm questionId={id} />
       </section>
     </>
   );

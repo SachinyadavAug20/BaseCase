@@ -11,6 +11,7 @@ import Link from "next/link";
 import { after } from "next/server";
 import AnswerForm from "@/components/forms/AnswerForm";
 import { GetAnswers } from "@/lib/actions/answer.action";
+import AllAnswers from "@/components/answers/AllAnswers";
 
 const page = async ({ params }: RouteParamas) => {
   const { id } = await params;
@@ -29,7 +30,6 @@ const page = async ({ params }: RouteParamas) => {
     data: answerResult,
     error: answerError,
   } = await GetAnswers({ page:page?Number(page):1, pageSize:pageSize?Number(pageSize):10, filter, questionId: id });
-  console.log(answerResult);
   const {
     author,
     createdAt,
@@ -107,7 +107,11 @@ const page = async ({ params }: RouteParamas) => {
           />
         ))}
       </div>
-      <div></div>
+
+      <section className="my-5">
+        <AllAnswers data={answerResult?.answers} success={areAnswerloaded} error={answerError} totalAnswers={answerResult?.totalAnswers || 0} />
+      </section>
+
       <section className="my-5">
         <AnswerForm questionId={id} />
       </section>

@@ -1,3 +1,4 @@
+import { title } from "process";
 import ROUTES from "./routes";
 
 export const DEFAULT_EMPTY = {
@@ -48,3 +49,8 @@ export const EMPTY_COLLECTIONS = {
     href: ROUTES.COLLECTION,
   },
 };
+
+export const EMPTY_ANSWERS={
+  title:"No Answer Found",
+  message:"No one has answered yet. Be the first to answer!",
+}

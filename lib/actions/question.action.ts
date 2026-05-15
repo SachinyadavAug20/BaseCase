@@ -40,7 +40,6 @@ export async function createQuestion(
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
-  console.log("validationResult", validationResult);
   const userId = validationResult?.session?.user?.id;
   const { title, content, tags } = validationResult.params!;
   // as need to update tag count and ref so need to start transaction
@@ -179,7 +178,6 @@ export async function getQuestion(
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
-  // console.log("validationResult", validationResult);
   const { questionId } = validationResult.params!;
   try {
     const question = await Question.findById(questionId).populate("tags").populate("author","_id name image");

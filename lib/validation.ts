@@ -189,7 +189,15 @@ export const GetAnswerSchema = PaginatedSearchParamsSchema.extend({
   questionId: z.string().min(1, { message: "Answer ID is required" }),
 });
 
-export const AIAnswerSchema=z.object({
-  question:z.string().min(5,{message:"Question is required"}).max(150,{message:"Question must be at most 150 characters"}),
-  content:z.string().min(100,{message:"Answer must be at least 100 characters"})
-})
+export const AIAnswerSchema = z.object({
+  question: z
+    .string()
+    .min(5, { message: "Question is required" })
+    .max(150, { message: "Question must be at most 150 characters" }),
+  content: z
+    .string()
+    .min(100, { message: "Answer must be at least 100 characters" }),
+  userAnswer: z
+    .string()
+    .optional()
+});

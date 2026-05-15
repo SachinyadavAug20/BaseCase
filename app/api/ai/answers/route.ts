@@ -7,7 +7,7 @@ import { generateText } from "ai";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { question, content } = await req.json();
+  const { question, content,userAnswer } = await req.json();
   try {
     const validateData = AIAnswerSchema.safeParse({ question, content });
     if (!validateData.success) {
@@ -62,9 +62,14 @@ QUESTION:
 ${question}
 """
 
-USER_ANSWER:
+QUESTION CONTENT:
 """
 ${content}
+"""
+
+USER_ANSWER:
+"""
+${userAnswer}
 """
 
 Generate the improved markdown answer now.`,

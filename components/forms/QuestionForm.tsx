@@ -128,7 +128,6 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
             description: result?.error?.message || "Something went wrong",
           });
         }
-        console.log(data);
       }
     });
   };

@@ -18,6 +18,8 @@ import { NotFoundError } from "../http-error";
 import mongoose, { ClientSession } from "mongoose";
 import { Answers, Question, Vote } from "@/dataBase";
 import { success } from "zod/v4";
+import { revalidatePath } from "next/cache";
+import ROUTES from "@/constant/routes";
 
 export async function updateVoteCount(
   params: UpdateVoteCountParams,
@@ -69,13 +71,15 @@ export async function createVote(
     const existingVote = await Vote.findOne({
       author: userId,
       id: targetId,
+      type: targetType,
     }).session(session);
     if (existingVote) {
       if (existingVote.voteType === voteType) {
         // remove vote
-        await Vote.deleteOne({ id: existingVote._id, author: userId }).session(
-          session,
-        );
+        await Vote.deleteOne({ 
+          _id: existingVote._id,
+          author: userId 
+        }).session( session,);
         await updateVoteCount(
           { targetId, targetType, voteType, change: -1 },
           session,
@@ -99,8 +103,7 @@ export async function createVote(
             author: userId,
             id: targetId,
             type: targetType,
-            voteType,
-            change: 1,
+            voteType: voteType,
           },
         ],
         { session },
@@ -117,6 +120,7 @@ export async function createVote(
     return handleError(error) as ErrorResponse;
   } finally {
     session.endSession();
+    revalidatePath(`${ROUTES.QUESTIONS}/${targetId}`);
   }
 }
 
@@ -136,11 +140,10 @@ export async function hasVoted(
     const vote = await Vote.findOne({
       author: UserId,
       id: targetId,
-      voteType: targetType,
     });
     if (!vote) {
       return {
-        success: false,
+        success: true,
         data: { hasDownvoted: false, hasUpvoted: false },
       };
     }

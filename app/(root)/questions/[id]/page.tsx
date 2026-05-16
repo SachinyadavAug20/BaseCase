@@ -13,6 +13,8 @@ import AnswerForm from "@/components/forms/AnswerForm";
 import { GetAnswers } from "@/lib/actions/answer.action";
 import AllAnswers from "@/components/answers/AllAnswers";
 import Votes from "@/components/votes/votes";
+import { hasVoted } from "@/lib/actions/vote.action";
+import { Suspense } from "react";
 
 const page = async ({ params }: RouteParamas) => {
   const { id } = await params;
@@ -30,7 +32,12 @@ const page = async ({ params }: RouteParamas) => {
     success: areAnswerloaded,
     data: answerResult,
     error: answerError,
-  } = await GetAnswers({ page:page?Number(page):1, pageSize:pageSize?Number(pageSize):10, filter, questionId: id });
+  } = await GetAnswers({
+    page: page ? Number(page) : 1,
+    pageSize: pageSize ? Number(pageSize) : 10,
+    filter,
+    questionId: id,
+  });
   const {
     author,
     createdAt,
@@ -42,6 +49,10 @@ const page = async ({ params }: RouteParamas) => {
     tags,
     title,
   } = question!;
+  const hasVotedPromise = hasVoted({
+    targetId: question._id,
+    targetType: "question",
+  });
 
   return (
     <>
@@ -62,7 +73,15 @@ const page = async ({ params }: RouteParamas) => {
             </Link>
           </div>
           <div className="flex justify-end">
-            <Votes upvotes={upvotes} hasUpVoted={true} downvotes={downvotes} hasDownVoted={true}/>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Votes
+                targetType='question'
+                targetId={question._id}
+                upvotes={upvotes}
+                downvotes={downvotes}
+                hasVotedPromise={hasVotedPromise}
+              />
+            </Suspense>
           </div>
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full">
@@ -110,11 +129,20 @@ const page = async ({ params }: RouteParamas) => {
       </div>
 
       <section className="my-5">
-        <AllAnswers data={answerResult?.answers} success={areAnswerloaded} error={answerError} totalAnswers={answerResult?.totalAnswers || 0} />
+        <AllAnswers
+          data={answerResult?.answers}
+          success={areAnswerloaded}
+          error={answerError}
+          totalAnswers={answerResult?.totalAnswers || 0}
+        />
       </section>
 
       <section className="my-5">
-        <AnswerForm questionId={id} questionTitle={title} questionContent={content}/>
+        <AnswerForm
+          questionId={id}
+          questionTitle={title}
+          questionContent={content}
+        />
       </section>
     </>
   );

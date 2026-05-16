@@ -12,8 +12,6 @@ const page = async ({ params }: RouteParamas) => {
   if (!session) return redirect(ROUTES.SIGN_IN);
   const { data: question, success } = await getQuestion({ questionId: id });
   if (!success) return notFound();
-  console.log("Q ID", question?.author._id);
-  console.log("A ID", session.user?.id);
   if (question?.author._id.toString() !== session.user?.id?.toString()) {
     redirect(`${ROUTES.QUESTIONS}/${id}`);
   }

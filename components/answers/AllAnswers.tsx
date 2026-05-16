@@ -9,7 +9,6 @@ interface Props extends ActionResponse<IAnswer[]> {
 }
 
 const AllAnswers = ({ data, success, error, totalAnswer }: Props) => {
-  console.log(totalAnswer, data, success, error);
   return (
     <div className="mt-11">
       <div className="flex flex-col items-start justify-between">

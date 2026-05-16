@@ -44,3 +44,14 @@ export interface GetAnswersParams{
   sort?:string;
   questionId:string
 }
+
+interface CreateVoteParams{
+  targetId:string, // can be questionId or answerId
+  targetType:'question'|'answer',
+  voteType:'upvote'|'downvote',
+}
+
+export interface UpdateVoteCountParams extends CreateVoteParams{
+  change: 1 | -1,
+}
+

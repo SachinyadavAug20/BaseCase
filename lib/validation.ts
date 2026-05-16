@@ -211,3 +211,8 @@ export const CreateVoteSchema=z.object({
 export const UpdateVoteCountSchema=CreateVoteSchema.extend({
   change:z.number().int().min(-1,{message:"Invalid change value"}).max(1,{message:"Invalid change value"}),
 })
+
+export const HasVotedSchema=CreateVoteSchema.pick({
+  targetId:true,
+  targetType:true
+})

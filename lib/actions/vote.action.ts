@@ -1,13 +1,23 @@
 "use server";
 
-import { CreateVoteParams, UpdateVoteCountParams } from "@/types/action";
+import {
+  CreateVoteParams,
+  HasVotedParams,
+  HasVotedResponse,
+  UpdateVoteCountParams,
+} from "@/types/action";
 import action from "../handlers/action";
-import { CreateVoteSchema, UpdateVoteCountSchema } from "../validation";
+import {
+  CreateVoteSchema,
+  HasVotedSchema,
+  UpdateVoteCountSchema,
+} from "../validation";
 import { ActionResponse, ErrorResponse } from "@/types/global";
 import handleError from "../handlers/error";
 import { NotFoundError } from "../http-error";
 import mongoose, { ClientSession } from "mongoose";
 import { Answers, Question, Vote } from "@/dataBase";
+import { success } from "zod/v4";
 
 export async function updateVoteCount(
   params: UpdateVoteCountParams,
@@ -66,25 +76,82 @@ export async function createVote(
         await Vote.deleteOne({ id: existingVote._id, author: userId }).session(
           session,
         );
-        await updateVoteCount({ targetId, targetType, voteType, change: -1 },session);
+        await updateVoteCount(
+          { targetId, targetType, voteType, change: -1 },
+          session,
+        );
       } else {
         await Vote.findByIdAndUpdate(
           existingVote._id,
           { voteType },
           { new: true, session },
         );
-        await updateVoteCount({ targetId, targetType, voteType, change: 1 },session);
+        await updateVoteCount(
+          { targetId, targetType, voteType, change: 1 },
+          session,
+        );
       }
-    }else{ // not touched 
-      await Vote.create([{author:userId,id:targetId,type:targetType,voteType,change:1}],{session})
-        await updateVoteCount({ targetId, targetType, voteType, change: 1 },session);
+    } else {
+      // not touched
+      await Vote.create(
+        [
+          {
+            author: userId,
+            id: targetId,
+            type: targetType,
+            voteType,
+            change: 1,
+          },
+        ],
+        { session },
+      );
+      await updateVoteCount(
+        { targetId, targetType, voteType, change: 1 },
+        session,
+      );
     }
     await session.commitTransaction();
-    return {success:true}
+    return { success: true };
   } catch (error) {
     session.abortTransaction();
     return handleError(error) as ErrorResponse;
   } finally {
     session.endSession();
+  }
+}
+
+export async function hasVoted(
+  params: HasVotedParams,
+): Promise<ActionResponse<HasVotedResponse>> {
+  const validationResult = await action({
+    params,
+    schema: HasVotedSchema,
+    authorize: true,
+  });
+  if (validationResult instanceof Error)
+    return handleError(validationResult) as ErrorResponse;
+  const { targetId, targetType } = validationResult.params!;
+  const UserId = validationResult.session?.user?.id;
+  try {
+    const vote = await Vote.findOne({
+      author: UserId,
+      id: targetId,
+      voteType: targetType,
+    });
+    if (!vote) {
+      return {
+        success: false,
+        data: { hasDownvoted: false, hasUpvoted: false },
+      };
+    }
+    return {
+      success: true,
+      data: {
+        hasDownvoted: vote.voteType === "downvote",
+        hasUpvoted: vote.voteType === "upvote",
+      },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
   }
 }

@@ -74,6 +74,7 @@ export async function createVote(
       type: targetType,
     }).session(session);
     if (existingVote) {
+      const oppositeVote = voteType === "upvote" ? "downvote" : "upvote";
       if (existingVote.voteType === voteType) {
         // remove vote
         await Vote.deleteOne({ 
@@ -92,6 +93,10 @@ export async function createVote(
         );
         await updateVoteCount(
           { targetId, targetType, voteType, change: 1 },
+          session,
+        );
+        await updateVoteCount(
+          { targetId, targetType, voteType:oppositeVote, change: -1 },
           session,
         );
       }

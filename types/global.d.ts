@@ -27,6 +27,8 @@ interface IAnswer {
   content: string;
   author: Author;
   createdAt: Date;
+  upvotes:number,
+  downvotes:number
 }
 
 type ActionResponse<T = null> = {

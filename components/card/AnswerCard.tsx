@@ -4,8 +4,16 @@ import Link from "next/link";
 import ROUTES from "@/constant/routes";
 import { getsTimeStamp } from "@/lib/utils";
 import Preview from "../editor/preview";
+import { Suspense } from "react";
+import Votes from "../votes/votes";
+import { hasVoted } from "@/lib/actions/vote.action";
 
-const AnswerCard = ({ _id, author, content, createdAt }: IAnswer) => {
+const AnswerCard = ({ _id, author, content, createdAt,upvotes,downvotes }: IAnswer) => {
+
+  const hasVotedPromise = hasVoted({
+    targetId: _id,
+    targetType: "answer",
+  });
   return (
     <article className="light-border border-b py-10 w-full">
       <span id={JSON.stringify(_id)} className="hash-span" />
@@ -30,11 +38,19 @@ const AnswerCard = ({ _id, author, content, createdAt }: IAnswer) => {
             </p>
           </Link>
         </div>
-        <div className="flex justify-end">Votes</div>
+        <div className="flex justify-end">
+            <Suspense fallback={<div>Loading...</div>}>
+              <Votes
+                targetType='answer'
+                targetId={_id}
+                upvotes={upvotes}
+                downvotes={downvotes}
+                hasVotedPromise={hasVotedPromise}
+              />
+            </Suspense>
+        </div>
       </div>
-      <Preview
-        content={content}
-      />
+      <Preview content={content} />
     </article>
   );
 };

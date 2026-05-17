@@ -14,7 +14,7 @@ import { User } from "@/dataBase";
 
 export async function getUsers(
   params: PaginatedSearchParams,
-): Promise<ActionResponse<{ user: IUser[]; isNext: boolean }>> {
+): Promise<ActionResponse<{ users: IUser[]; isNext: boolean }>> {
   const validatedResult = await action({
     params,
     schema: PaginatedSearchParamsSchema,
@@ -57,7 +57,7 @@ export async function getUsers(
     const isNext = users.length+skip < totalUsers;
     return {
       success: true,
-      data: { user: JSON.parse(JSON.stringify(users)), isNext },
+      data: { users: JSON.parse(JSON.stringify(users)), isNext },
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;

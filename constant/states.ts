@@ -54,3 +54,8 @@ export const EMPTY_ANSWERS={
   title:"No Answer Found",
   message:"No one has answered yet. Be the first to answer!",
 }
+
+export const EMPTY_USERS={
+  title:"No User Found",
+  message:"No one has registered yet. Be the first to register!",
+}

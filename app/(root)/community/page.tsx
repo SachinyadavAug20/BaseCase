@@ -1,7 +1,40 @@
-const page = () => {
-  return (
-    <div>Community</div>
-  )
-}
+import DataRenderer from "@/components/DataRenderer";
+import LocalSearch from "@/components/search/LocalSearch";
+import ROUTES from "@/constant/routes";
+import { EMPTY_COLLECTIONS, EMPTY_USERS } from "@/constant/states";
+import { getUsers } from "@/lib/actions/user.action";
+import { RouteParamas } from "@/types/global";
 
-export default page
+const page = async ({ searchParams }: RouteParamas) => {
+  const { page, pageSize, query, filter } = await searchParams;
+  const { success, data, error } = await getUsers({
+    page: page ? Number(page) : 1,
+    pageSize: pageSize ? Number(pageSize) : 10,
+    query,
+    filter,
+  });
+  const {users}=data||{}
+  return( <div>
+    <h1 className="h1-bold text-dark100_light900">All Users</h1>
+    <div className="mt-11">
+      <LocalSearch route={ROUTES.COMMUNITY} iconsPosition="left" imgSrc="/icons/search.svg" placeholder="Search some great devs..." otherClasses="flex-1"/>
+    </div>
+    <DataRenderer
+      sucess={success}
+      error={error}
+      empty={EMPTY_USERS}
+      data={users}
+      render={(users) =>(
+        <div className="mt-12 flex flex-wrap gap-5">
+          {users.map((u)=>(
+            <div key={u._id}>
+              <p className="body-semibold text-dark300_light700">{u.name}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    />
+  </div>);
+};
+
+export default page;

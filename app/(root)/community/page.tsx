@@ -1,3 +1,4 @@
+import UserCard from "@/components/card/UserCard";
 import DataRenderer from "@/components/DataRenderer";
 import LocalSearch from "@/components/search/LocalSearch";
 import ROUTES from "@/constant/routes";
@@ -27,9 +28,7 @@ const page = async ({ searchParams }: RouteParamas) => {
       render={(users) =>(
         <div className="mt-12 flex flex-wrap gap-5">
           {users.map((u)=>(
-            <div key={u._id}>
-              <p className="body-semibold text-dark300_light700">{u.name}</p>
-            </div>
+            <UserCard key={u._id} {...u}/>
           ))}
         </div>
       )}

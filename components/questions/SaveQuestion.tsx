@@ -1,15 +1,23 @@
 "use client";
 
 import { toggleSaveQuestion } from "@/lib/actions/collection.action";
+import { ActionResponse } from "@/types/global";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
+import { use, useState } from "react";
 import { toast } from "sonner";
 
-const SaveQuestion = ({ questionId }: { questionId: string }) => {
+interface Props {
+  questionId: string;
+  hasSavedPromise: Promise<ActionResponse<{ saved: boolean }>>;
+}
+
+const SaveQuestion = ({ questionId,hasSavedPromise }: Props) => {
   const session = useSession();
   const UserId = session.data?.user?.id;
   const [isLoading, setIsLoading] = useState(false);
+  const {success,data}=use(hasSavedPromise);
+  const {saved:hasSaved}=data || {saved:false};
   const handleSave = async () => {
     if (isLoading) {
       return toast.info("Please wait");
@@ -28,6 +36,7 @@ const SaveQuestion = ({ questionId }: { questionId: string }) => {
       toast.success(`Question ${data?.saved ? 'saved' : 'removed'}`,{
         description: data?.saved ? 'Question saved successfully' : 'Question removed successfully'
       });
+      // toggle hasSaved
     } catch (error) {
       toast.error("Error", {
         description: `Something went wrong, please try again ${error instanceof Error ? error.message : error}`,
@@ -36,7 +45,6 @@ const SaveQuestion = ({ questionId }: { questionId: string }) => {
       setIsLoading(false);
     }
   };
-  const [hasSaved, setHasSaved] = useState(false);
   return (
     <Image
       src={hasSaved ? "/icons/star-filled.svg":"/icons/star-red.svg"}

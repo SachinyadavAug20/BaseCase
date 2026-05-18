@@ -15,6 +15,7 @@ import AllAnswers from "@/components/answers/AllAnswers";
 import Votes from "@/components/votes/votes";
 import { hasVoted } from "@/lib/actions/vote.action";
 import { Suspense } from "react";
+import SaveQuestion from "@/components/questions/SaveQuestion";
 
 const page = async ({ params }: RouteParamas) => {
   const { id } = await params;
@@ -81,6 +82,9 @@ const page = async ({ params }: RouteParamas) => {
                 downvotes={downvotes}
                 hasVotedPromise={hasVotedPromise}
               />
+            </Suspense>
+            <Suspense fallback={<div>Loading...</div>}>
+              <SaveQuestion question={question._id}/>
             </Suspense>
           </div>
         </div>

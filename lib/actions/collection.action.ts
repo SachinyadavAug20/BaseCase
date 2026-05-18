@@ -134,7 +134,7 @@ export async function getSavedQuestions(
   try {
     const collection = await Collection.findOne({
       author: userId,
-    }).populate("author");
+    });
 
     // .populate({
     //   path: "questions",
@@ -150,9 +150,9 @@ export async function getSavedQuestions(
     const questions = await Question.find({
       _id: { $in: collection?.questions },
       ...searchQuery
-    }).sort(sortCriteria).skip(skip).limit(limit).populate('tags');
+    }).sort(sortCriteria).skip(skip).limit(limit).populate('tags').populate('author');
     const data = {
-      _id: collection._id,
+      _id: userId,
       author: collection.author,
       questions,
     };

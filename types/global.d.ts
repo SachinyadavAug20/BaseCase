@@ -71,4 +71,10 @@ interface IUser {
   reputation?:number
 }
 
+interface CollectionResponse {
+  _id: string;
+  author:string | Author;
+  questions:Question[]
+}
+
 // Record<string,string> means key value pair of string:string

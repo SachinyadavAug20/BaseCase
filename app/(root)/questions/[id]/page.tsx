@@ -75,7 +75,7 @@ const page = async ({ params }: RouteParamas) => {
               </p>
             </Link>
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end items-center gap-2">
             <Suspense fallback={<div>Loading...</div>}>
               <Votes
                 targetType='question'

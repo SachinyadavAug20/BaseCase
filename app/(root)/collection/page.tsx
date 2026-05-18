@@ -1,4 +1,6 @@
-const page = () => {
+import { getSavedQuestions } from "@/lib/actions/collection.action"
+
+const page = async () => {
   return (
     <div>Collection</div>
   )

@@ -1,6 +1,7 @@
 import UserCard from "@/components/card/UserCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filters/CommonFilter";
+import Pagination from "@/components/Pagination";
 import LocalSearch from "@/components/search/LocalSearch";
 import { UserFilters } from "@/constant/filter";
 import ROUTES from "@/constant/routes";
@@ -36,6 +37,7 @@ const page = async ({ searchParams }: RouteParamas) => {
         </div>
       )}
     />
+      <Pagination page={page} isNext={data?.isNext || false}/>
   </div>);
 };
 

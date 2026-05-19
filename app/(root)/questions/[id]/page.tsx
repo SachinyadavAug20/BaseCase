@@ -36,7 +36,7 @@ const page = async ({ params,searchParams }: RouteParamas) => {
     error: answerError,
   } = await GetAnswers({
     page: page ? Number(page) : 1,
-    pageSize: pageSize ? Number(pageSize) : 10,
+    pageSize: pageSize ? Number(pageSize) : 3,
     filter,
     questionId: id,
   });
@@ -140,6 +140,9 @@ const page = async ({ params,searchParams }: RouteParamas) => {
           success={areAnswerloaded}
           error={answerError}
           totalAnswers={answerResult?.totalAnswers || 0}
+          page={Number(page)||1}
+          pageSize={Number(pageSize)||3}
+          isNext={answerResult?.isNext}
         />
       </section>
 

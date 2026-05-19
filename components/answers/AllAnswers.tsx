@@ -5,12 +5,16 @@ import { Answers } from "@/dataBase";
 import AnswerCard from "../card/AnswerCard";
 import CommonFilter from "../filters/CommonFilter";
 import { AnswerFilters } from "@/constant/filter";
+import Pagination from "../Pagination";
 
 interface Props extends ActionResponse<IAnswer[]> {
   totalAnswer: number;
+  page?: number;
+  pageSize?: number;
+  isNext?: boolean;
 }
 
-const AllAnswers = ({ data, success, error, totalAnswer }: Props) => {
+const AllAnswers = ({ data, success, error, totalAnswer,page,pageSize,isNext=false }: Props) => {
   return (
     <div className="mt-11">
       <div className="flex flex-col items-start justify-between">
@@ -32,6 +36,8 @@ const AllAnswers = ({ data, success, error, totalAnswer }: Props) => {
           )}
         />
       </div>
+            <Pagination page={page} isNext={isNext || false}/>
+
     </div>
   );
 };

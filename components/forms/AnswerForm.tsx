@@ -27,7 +27,7 @@ interface Props {
   questionTitle: string;
   questionContent: string;
 }
-const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
+const AnswerForm = ({ questionId, questionTitle, questionContent}: Props) => {
   const [isAnswering, startAnsweringTransition] = useTransition();
   const [isAISubmitting, setIsAISubmiting] = useState(false); // for modify answer
   const session = useSession();
@@ -67,7 +67,7 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
     setIsAISubmiting(true);
     const userAnswer=editorRef.current?.getMarkdown();
     try {
-      const { success, data, error } = await api.ai.getAnswer(
+      const { success, data, error } = api.ai.getAnswer(
         questionTitle,
         questionContent,
         userAnswer

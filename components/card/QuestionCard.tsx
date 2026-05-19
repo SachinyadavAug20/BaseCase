@@ -23,7 +23,7 @@ const QuestionCard = ({ question: { _id, title,content, tags, author, createdAt,
         </div>
       </div>
       <div className="mt-3.5 flex w-full flex-wrap gap-2">
-        {tags.map((tag: Tags) => {
+        {tags.map((tag) => {
           return (
             <TagCard
               key={tag._id}

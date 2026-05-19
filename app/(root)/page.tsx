@@ -19,7 +19,7 @@ export default async function Home({ searchParams }: SearchParams) {
   const { page, pageSize, query, filter } = await searchParams; // are from url so strings
   const { success, data, error } = await getQuestions({
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 2,
+    pageSize: Number(pageSize) || 10,
     query: query || "",
     filter: filter || "",
   });
@@ -66,7 +66,7 @@ export default async function Home({ searchParams }: SearchParams) {
           }
         />
       </div>
-      <Pagination page={page} isNext={data?.isNext}/>
+      <Pagination page={page} isNext={data?.isNext || false}/>
     </>
   );
 }

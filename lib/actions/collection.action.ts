@@ -117,7 +117,7 @@ export async function getSavedQuestions(
   const sortOptions: Record<string, Record<string, 1 | -1>> = {
     mostrecent: { createdAt: -1 },
     oldest: { createdAt: 1 },
-    mostupvoted: { upvotes: -1 },
+    mostvoted: { upvotes: -1 },
     mostviewed: { views: -1 },
     mostanswered: { answers: -1 },
   };

@@ -18,7 +18,7 @@ import { Suspense } from "react";
 import SaveQuestion from "@/components/questions/SaveQuestion";
 import { hasSavedQuestion } from "@/lib/actions/collection.action";
 
-const page = async ({ params }: RouteParamas) => {
+const page = async ({ params,searchParams }: RouteParamas) => {
   const { id } = await params;
   const { success, data: question } = await getQuestion({ questionId: id });
 
@@ -29,7 +29,7 @@ const page = async ({ params }: RouteParamas) => {
   if (!success || !question) {
     return redirect("/404");
   }
-  const { pageSize, filter, page } = await params;
+  const { pageSize, filter, page} = await searchParams;
   const {
     success: areAnswerloaded,
     data: answerResult,

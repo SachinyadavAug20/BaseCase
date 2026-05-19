@@ -1,20 +1,36 @@
 import QuestionCard from "@/components/card/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
+import CommonFilter from "@/components/filters/CommonFilter";
+import { HomePageFilters, TagFilters } from "@/constant/filter";
 import { EMPTY_QUESTIONS } from "@/constant/states";
 import { getDevIcon } from "@/constant/techmap";
-import { getTagQuestion } from "@/lib/actions/tag.action"
-import { RouteParamas } from "@/types/global"
+import { getTagQuestion } from "@/lib/actions/tag.action";
+import { RouteParamas } from "@/types/global";
 
-const page =async ({params}:RouteParamas) => {
-  const {id,page,pageSize,query}=await params
-  const {success,data,error}=await getTagQuestion({tagId:id,page,pageSize,query});
-  const {tag,questions,isNext}=data||{}
+const page = async ({ params,searchParams }: RouteParamas) => {
+  const { id } = await params;
+  const { page, pageSize, query, filter}=await searchParams;
+  const { success, data, error } = await getTagQuestion({
+    tagId: id,
+    page,
+    pageSize,
+    filter,
+    query,
+  });
+  const { tag, questions, isNext } = data || {};
   return (
     <div>
-      <h2 className="h2-bold text-dark100_light900 w-full flex gap-13 items-center ml-2 justify-between"><span className="text-dark400_light600">{tag.name.toUpperCase()}</span>
-          <i className={`${getDevIcon(tag.name)} text-2xl`} aria-hidden="true" />
-          </h2>
-          
+      <h2 className="h2-bold text-dark100_light900 w-full flex gap-13 items-center ml-2 justify-between">
+        <span className="text-dark400_light600">{tag?.name.toUpperCase()}</span>
+        <i className={`${getDevIcon(tag?.name)} text-2xl`} aria-hidden="true" />
+      </h2>
+
+      <section className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
+        <CommonFilter
+          filters={HomePageFilters}
+          otherClasses="sm:min-w-[170px] min-h-[56px]"
+        />
+      </section>
       <div className="mt-10 flex w-full flex-col gap-6">
         <DataRenderer
           sucess={success}
@@ -31,7 +47,7 @@ const page =async ({params}:RouteParamas) => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

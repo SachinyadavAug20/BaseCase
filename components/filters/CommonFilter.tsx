@@ -48,7 +48,7 @@ const CommonFilter = ({
         defaultValue={paramsFilter || undefined}
       >
         <SelectTrigger
-          className={`body-regular no-focus light-border background-light800_dark300 text-dark500_light700 border px-5 py-2.5 `}
+          className={`body-regular no-focus light-border background-light800_dark300 text-dark500_light700 border px-5 py-2.5 ${otherClasses}`}
           aria-label="filter options"
         >
           <SelectValue placeholder="Select a filter" />

@@ -75,19 +75,34 @@ export const getTagQuestion = async (
   });
   if (validationResult instanceof Error)
     return handleError(validationResult) as ErrorResponse;
-  const { page = 1, pageSize = 10, query, tagId } = params;
+  const { page = 1, pageSize = 10, filter, tagId } = params;
   const skip = (Number(page) - 1) * Number(pageSize);
   const limit = Number(pageSize);
+
+  const filterQ: FilterQuery<typeof Question> = {};
+  let sortCriteria = {};
+  switch (filter) {
+    case "newest":
+      sortCriteria = { createdAt: -1 };
+      break;
+    case "unanswered":
+      filterQ.answers = 0;
+      sortCriteria = { createdAt: -1 };
+      break;
+    case "popular":
+      sortCriteria = { upvotes: -1 };
+      break;
+    default:
+      sortCriteria = { createdAt: -1 };
+  }
   try {
     const tag = await Tag.findById(tagId);
     if (!tag) throw new Error("Tag not found");
     const filterQuery: FilterQuery<typeof Question> = {
       tags: { $in: [tag] },
     };
+    if (filter === "unanswered") filterQuery.answers = 0;
 
-    if (query) {
-      filterQuery.title = { $regex: query, $options: "i" };
-    }
     const totalQuestions = await Question.countDocuments(filterQuery);
     const questions = await Question.find(filterQuery)
       .select("_id title views answers upvotes downvotes author createdAt")
@@ -95,6 +110,7 @@ export const getTagQuestion = async (
         { path: "author", select: "name image" },
         { path: "tags", select: "name" },
       ])
+      .sort(sortCriteria)
       .skip(skip)
       .limit(limit);
     const isNext = totalQuestions > skip + questions.length;

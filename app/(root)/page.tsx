@@ -9,6 +9,7 @@ import { EMPTY_QUESTIONS } from "@/constant/states";
 import QuestionCard from "@/components/card/QuestionCard";
 import CommonFilter from "@/components/filters/CommonFilter";
 import { HomePageFilters } from "@/constant/filter";
+import Pagination from "@/components/Pagination";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -18,7 +19,7 @@ export default async function Home({ searchParams }: SearchParams) {
   const { page, pageSize, query, filter } = await searchParams; // are from url so strings
   const { success, data, error } = await getQuestions({
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 10,
+    pageSize: Number(pageSize) || 2,
     query: query || "",
     filter: filter || "",
   });
@@ -65,6 +66,7 @@ export default async function Home({ searchParams }: SearchParams) {
           }
         />
       </div>
+      <Pagination page={page} isNext={data?.isNext}/>
     </>
   );
 }

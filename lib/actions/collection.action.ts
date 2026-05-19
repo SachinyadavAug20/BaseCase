@@ -153,7 +153,7 @@ export async function getSavedQuestions(
     }).sort(sortCriteria).skip(skip).limit(limit).populate('tags').populate('author');
     const data = {
       _id: userId,
-      author: collection.author,
+      author: questions[0].author,
       questions,
     };
     const isNext = skip + limit < totalCount;

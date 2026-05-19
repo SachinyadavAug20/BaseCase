@@ -1,5 +1,5 @@
+import { auth } from "@/auth";
 import QuestionCard from "@/components/card/QuestionCard";
-import UserCard from "@/components/card/UserCard";
 import DataRenderer from "@/components/DataRenderer";
 import LocalSearch from "@/components/search/LocalSearch";
 import ROUTES from "@/constant/routes";
@@ -10,6 +10,7 @@ interface SearchParams {
 }
 
 const page = async ( { searchParams }: SearchParams) => {
+  const session=await auth();
   const { page, pageSize, query, filter } = await searchParams;
   const {success,data,error}=await getSavedQuestions({
     page: Number(page) || 1,
@@ -17,7 +18,7 @@ const page = async ( { searchParams }: SearchParams) => {
     query: query || "",
     filter: filter || "",
   });
-  const {_id,author,questions}=data?.Collection!;
+  const {_id,questions}=data?.Collection!;
   return (
     <>
       <section className="w-full flex flex-col-reverse sm:flex-row justify-between gap-4 sm:items-center">

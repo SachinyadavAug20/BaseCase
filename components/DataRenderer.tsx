@@ -85,7 +85,7 @@ const DataRenderer = <T,>({
         }}
         title={error?.message || DEFAULT_ERROR.title}
         message={error?.details?JSON.stringify(error.details):DEFAULT_ERROR.message}
-        button={DEFAULT_ERROR.button}
+        button={empty.button}
       />
   )
   if (!data || data.length === 0) return (

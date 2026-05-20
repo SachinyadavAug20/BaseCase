@@ -1,4 +1,4 @@
-import Tag, { ITag } from "@/dataBase/tag.model";
+import Tag, { ITag, ITagDoc } from "@/dataBase/tag.model";
 import {
   ActionResponse,
   ErrorResponse,
@@ -14,6 +14,7 @@ import handleError from "../handlers/error";
 import { FilterQuery } from "mongoose";
 import { GetTagQuestionParams } from "@/types/action";
 import { Question } from "@/dataBase";
+import dbConnect from "../mongoose";
 
 export const getTags = async (
   params: PaginatedSearchParams,
@@ -126,3 +127,16 @@ export const getTagQuestion = async (
     return handleError(error) as ErrorResponse;
   }
 };
+
+export async function getPopularTags():Promise<ActionResponse<ITag[]>>{
+  try {
+    await dbConnect();
+    const tags=await Tag.find().sort({questions:-1}).limit(5)
+    return{
+      success:true,
+      data:JSON.parse(JSON.stringify(tags))
+    }
+  } catch (error) {
+    return handleError(error) as ErrorResponse
+  }
+}

@@ -68,7 +68,8 @@ interface IUser {
   image: string;
   location?:string;
   portfolio?:string;
-  reputation?:number
+  reputation?:number;
+  createdAt: Date;
 }
 
 interface CollectionResponse {

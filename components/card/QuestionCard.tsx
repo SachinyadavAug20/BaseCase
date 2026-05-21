@@ -1,10 +1,8 @@
 import ROUTES from "@/constant/routes";
 import { getsTimeStamp } from "@/lib/utils";
 import Link from "next/link";
-import { string } from "zod";
 import TagCard from "./TagCard";
 import Metric from "../ui/Metric";
-import { auth } from "@/auth";
 import { IQuestion } from "@/types/global";
 
 const QuestionCard = ({ question: { _id, title,content, tags, author, createdAt, upvotes, downvotes, answers, views, }, }: { question:IQuestion; }) => {

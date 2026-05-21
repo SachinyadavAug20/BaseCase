@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import ProfileLinks from "@/components/user/ProfileLinks";
 import UserAvatar from "@/components/UserAvatar";
-import { getUser } from "@/lib/actions/user.action";
+import { getUser, getUserQuestions } from "@/lib/actions/user.action";
 import { RouteParamas } from "@/types/global";
 import { notFound } from "next/navigation";
 import dayjs from "dayjs";
@@ -9,8 +9,13 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Stats from "@/components/user/stats";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import DataRenderer from "@/components/DataRenderer";
+import ROUTES from "@/constant/routes";
+import QuestionCard from "@/components/card/QuestionCard";
+import Image from "next/image";
+import Pagination from "@/components/Pagination";
 
-const page = async ({ params }: RouteParamas) => {
+const page = async ({ params, searchParams }: RouteParamas) => {
   const { userId } = await params;
   if (!userId) notFound();
   const loggedInUser = await auth();
@@ -21,6 +26,17 @@ const page = async ({ params }: RouteParamas) => {
     );
   }
   const { totalQuestions, totalAnswers, user } = data || {};
+  const { page, pageSize } = await searchParams;
+  const {
+    success: userQuestionSuccess,
+    data: userQuestionData,
+    error: userQuestionError,
+  } = await getUserQuestions({
+    userId,
+    page: page ? Number(page) : 1,
+    pageSize: pageSize ? Number(pageSize) : 10,
+  });
+  const { questions, isNext: questionIsNext } = userQuestionData!;
   const {
     name,
     username,
@@ -42,7 +58,7 @@ const page = async ({ params }: RouteParamas) => {
             imageUrl={image}
             name={name}
             className="size-[140px] rounded-full object-cover"
-            fallbackclassName="text-[85px] text-center font-bolder w-[140px] h-[140px]"
+            fallbackclassName="text-[80px] text-center font-bolder w-[140px] h-[140px]"
           />
           <div className="mt-3">
             <h2 className="h2-bold text-dark100_light900">{name}</h2>
@@ -98,18 +114,39 @@ const page = async ({ params }: RouteParamas) => {
             variant="default"
             className="background-light800_dark400 min-h-10.5 p-1"
           >
-            <TabsTrigger value="top-post" className="tab">
-              Top Post
+            <TabsTrigger value="top-post" className="tab">Top-posts
             </TabsTrigger>
-            <TabsTrigger value="answers" className="tab">
-              Answers
+            <TabsTrigger value="answers" className="tab">Answers
             </TabsTrigger>
           </TabsList>
           <TabsContent
             value="top-post"
             className="mt-5 flex w-full flex-col gap-6"
           >
-            List of Question
+            <div>
+              <DataRenderer
+                data={questions}
+                error={userQuestionError}
+                sucess={userQuestionSuccess}
+                empty={{
+                  title: "You have no questions yet",
+                  message: "Ask a question to get your reputation boost",
+                  button: {
+                    text: "Ask a Question",
+                    href: ROUTES.ASKQUESTION,
+                  },
+                }}
+                render={(questions) =>(
+                  <div className="flex w-full flex-col gap-6">
+                  {questions.map((question)=>(
+                    <QuestionCard key={question?._id} question={question}/>
+                  ))}
+                  </div>
+                )
+                }
+              />
+              <Pagination page={page} isNext={questionIsNext || false} />
+              </div>
           </TabsContent>
           <TabsContent
             value="answers"

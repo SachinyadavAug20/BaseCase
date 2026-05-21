@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Stats from "@/components/user/stats";
 
 const page = async ({ params }: RouteParamas) => {
   const { userId } = await params;
@@ -32,6 +33,7 @@ const page = async ({ params }: RouteParamas) => {
   } = user!;
 
   return (
+    <>
     <section className="flex flex-col-reverse items-start justify-between sm:flex-row!">
       <div className="flex flex-col items-start gap-4 lg:flex-row">
         <UserAvatar
@@ -78,6 +80,16 @@ const page = async ({ params }: RouteParamas) => {
         )}
       </div>
     </section>
+    <Stats
+      totalQuestions={totalQuestions!}
+      totalAnswers={totalAnswers!}
+      badges={{
+        GOLD:0,
+        SILVER:0,
+        BRONZE:0
+      }}
+    />
+    </>
   );
 };
 

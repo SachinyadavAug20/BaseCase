@@ -78,4 +78,10 @@ interface CollectionResponse {
   questions:Question[]
 }
 
+interface BadgeCounts{
+  GOLD:number,
+  SILVER:number,
+  BRONZE:number
+}
+
 // Record<string,string> means key value pair of string:string

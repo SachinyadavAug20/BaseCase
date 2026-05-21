@@ -1,7 +1,11 @@
 import { auth } from "@/auth";
 import ProfileLinks from "@/components/user/ProfileLinks";
 import UserAvatar from "@/components/UserAvatar";
-import { getUser, getUserQuestions } from "@/lib/actions/user.action";
+import {
+  getUser,
+  getUserAnswers,
+  getUserQuestions,
+} from "@/lib/actions/user.action";
 import { RouteParamas } from "@/types/global";
 import { notFound } from "next/navigation";
 import dayjs from "dayjs";
@@ -14,6 +18,7 @@ import ROUTES from "@/constant/routes";
 import QuestionCard from "@/components/card/QuestionCard";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
+import AnswerCard from "@/components/card/AnswerCard";
 
 const page = async ({ params, searchParams }: RouteParamas) => {
   const { userId } = await params;
@@ -37,6 +42,16 @@ const page = async ({ params, searchParams }: RouteParamas) => {
     pageSize: pageSize ? Number(pageSize) : 10,
   });
   const { questions, isNext: questionIsNext } = userQuestionData!;
+  const {
+    success: userAnswerSuccess,
+    data: userAnswerData,
+    error: userAnswerError,
+  } = await getUserAnswers({
+    userId,
+    page: page ? Number(page) : 1,
+    pageSize: pageSize ? Number(pageSize) : 10,
+  });
+  const { answers, isNext: answerIsNext } = userAnswerData!;
   const {
     name,
     username,
@@ -114,9 +129,11 @@ const page = async ({ params, searchParams }: RouteParamas) => {
             variant="default"
             className="background-light800_dark400 min-h-10.5 p-1"
           >
-            <TabsTrigger value="top-post" className="tab">Top-posts
+            <TabsTrigger value="top-post" className="tab">
+              Top-posts
             </TabsTrigger>
-            <TabsTrigger value="answers" className="tab">Answers
+            <TabsTrigger value="answers" className="tab">
+              Answers
             </TabsTrigger>
           </TabsList>
           <TabsContent
@@ -136,23 +153,50 @@ const page = async ({ params, searchParams }: RouteParamas) => {
                     href: ROUTES.ASKQUESTION,
                   },
                 }}
-                render={(questions) =>(
+                render={(questions) => (
                   <div className="flex w-full flex-col gap-6">
-                  {questions.map((question)=>(
-                    <QuestionCard key={question?._id} question={question}/>
-                  ))}
+                    {questions.map((question) => (
+                      <QuestionCard key={question?._id} question={question} />
+                    ))}
                   </div>
-                )
-                }
+                )}
               />
               <Pagination page={page} isNext={questionIsNext || false} />
-              </div>
+            </div>
           </TabsContent>
           <TabsContent
             value="answers"
             className="mt-5 flex w-full flex-col gap-6"
           >
-            List of answers
+            <div>
+              <DataRenderer
+                data={answers}
+                error={userAnswerError}
+                sucess={userAnswerSuccess}
+                empty={{
+                  title: "You have no answers yet",
+                  message: "Answer questions to get your reputation boost",
+                  button: {
+                    text: "Explor Questions",
+                    href: ROUTES.HOME,
+                  },
+                }}
+                render={(answers) => (
+                  <div className="flex w-full flex-col gap-6">
+                    {answers.map((answer) => (
+                      <AnswerCard
+                        key={answer._id}
+                        {...answer}
+                        content={answer.content.slice(0, 27) + "..."} // not show long content
+                        showReadMore={true}
+                        containerClasses="card-wrapper rounded-[10px] px-7 py-9 sm:px-11"
+                      />
+                    ))}
+                  </div>
+                )}
+              />
+              <Pagination page={page} isNext={answerIsNext || false} />
+            </div>
           </TabsContent>
         </Tabs>
         <div className="flex w-full min-w-62.5 flex-1 flex-col max-lg:hidden">

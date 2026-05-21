@@ -3,12 +3,14 @@
 import {
   ActionResponse,
   ErrorResponse,
+  IAnswer,
   IQuestion,
   PaginatedSearchParams,
 } from "@/types/global";
 import { IUser } from "@/types/global";
 import action from "../handlers/action";
 import {
+    GetUserAnswersSchema,
   GetUserQuestionsSchema,
   GetUserSchema,
   PaginatedSearchParamsSchema,
@@ -16,7 +18,7 @@ import {
 import handleError from "../handlers/error";
 import { FilterQuery } from "mongoose";
 import { Answers, Question, User } from "@/dataBase";
-import { GetUserParams, GetUserQuestionsParams } from "@/types/action";
+import { GetUserAnswersParams, GetUserParams, GetUserQuestionsParams } from "@/types/action";
 import { inspect } from "util";
 import { useId } from "react";
 import { NotFoundError } from "../http-error";
@@ -136,6 +138,41 @@ export async function getUserQuestions(params: GetUserQuestionsParams): Promise<
       success: true,
       data: {
         questions:JSON.parse(JSON.stringify(questions)),
+        isNext,
+      },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getUserAnswers(params: GetUserAnswersParams): Promise<
+  ActionResponse<{
+    answers: IAnswer[];
+    isNext: boolean;
+  }>
+> {
+  const validatedResult = await action({
+    params,
+    schema: GetUserAnswersSchema,
+  });
+  if (validatedResult instanceof Error) {
+    return handleError(validatedResult) as ErrorResponse;
+  }
+  const { userId, page = 1, pageSize = 10 } = validatedResult.params!;
+  const skip = (Number(page) - 1) * Number(pageSize);
+  const limit = Number(pageSize);
+  try {
+    const totalAnswer = await Answers.countDocuments({ author: userId });
+    const answers = await Answers.find({ author: userId })
+      .populate("author", "_id name image")
+      .skip(skip)
+      .limit(limit)
+    const isNext = answers.length + skip < totalAnswer;
+    return {
+      success: true,
+      data: {
+        answers:JSON.parse(JSON.stringify(answers)),
         isNext,
       },
     };

@@ -53,7 +53,7 @@ const MobileNavbar = async () => {
           <div className="no-scrollbar flex h-screen flex-col justify-around overflow-hidden px-2 pb-5">
             <SheetClose asChild>
               <section className="flex h-full flex-col gap-6 pt-16">
-                <NavLinks isMobileNav={true} />
+                <NavLinks isMobileNav={true} userId={userId}/>
               </section>
             </SheetClose>
             {!userId ? (

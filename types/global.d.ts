@@ -29,6 +29,7 @@ interface IAnswer {
   createdAt: Date;
   upvotes:number,
   downvotes:number
+  question?:String
 }
 
 type ActionResponse<T = null> = {

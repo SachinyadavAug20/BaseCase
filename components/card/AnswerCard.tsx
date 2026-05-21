@@ -8,15 +8,20 @@ import { Suspense } from "react";
 import Votes from "../votes/votes";
 import { hasVoted } from "@/lib/actions/vote.action";
 
-const AnswerCard = ({ _id, author, content, createdAt,upvotes,downvotes }: IAnswer) => {
+interface Props extends IAnswer{
+  containerClasses?:string,
+  showReadMore?:boolean
+}
+
+const AnswerCard = ({ _id, author, content, createdAt,upvotes,downvotes,question,containerClasses, showReadMore=false }: Props) => {
 
   const hasVotedPromise = hasVoted({
     targetId: _id,
     targetType: "answer",
   });
   return (
-    <article className="light-border border-b py-10 w-full">
-      <span id={JSON.stringify(_id)} className="hash-span" />
+    <article className={`light-border border-b py-10 w-full ${containerClasses}`}>
+      <span id={`answer-${_id}`} className="hash-span" />
       <div className="mb-5 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
         <div className="flex flex-1 items-center gap-1">
           <UserAvatar
@@ -51,6 +56,9 @@ const AnswerCard = ({ _id, author, content, createdAt,upvotes,downvotes }: IAnsw
         </div>
       </div>
       <Preview content={content} />
+      {showReadMore && (
+        <Link href={`${ROUTES.QUESTIONS}/${question}#answer-${_id}`} className="body-semibold relative z-10 font-logofont text-primary-500"><p className="mt-1">Read more...</p></Link>
+      )}
     </article>
   );
 };

@@ -12,6 +12,7 @@ const NavLinks = ({isMobileNav=false,userId}:{isMobileNav?:boolean,userId?:strin
     <div className="px-1">
     {sidebarLinks.map((link)=>{
       const isActive = (pathname.includes(link.route) && link.route.length>1) || pathname===link.route;
+
       if(link.route==="/profile"){
         if(userId) link.route=`${link.route}/${userId}`
         else return null;

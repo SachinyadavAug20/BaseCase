@@ -13,15 +13,17 @@ import {
     GetUserAnswersSchema,
   GetUserQuestionsSchema,
   GetUserSchema,
+  GetUserTagsSchema,
   PaginatedSearchParamsSchema,
 } from "../validation";
 import handleError from "../handlers/error";
-import { FilterQuery } from "mongoose";
+import { FilterQuery, PipelineStage, Types } from "mongoose";
 import { Answers, Question, User } from "@/dataBase";
-import { GetUserAnswersParams, GetUserParams, GetUserQuestionsParams } from "@/types/action";
+import { GetUserAnswersParams, GetUserParams, GetUserQuestionsParams, GetUserTagsParams } from "@/types/action";
 import { inspect } from "util";
 import { useId } from "react";
 import { NotFoundError } from "../http-error";
+import { ITag, ITagDoc } from "@/dataBase/tag.model";
 
 export async function getUsers(
   params: PaginatedSearchParams,
@@ -175,6 +177,47 @@ export async function getUserAnswers(params: GetUserAnswersParams): Promise<
         answers:JSON.parse(JSON.stringify(answers)),
         isNext,
       },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+
+export async function getUserTags(params: GetUserTagsParams): Promise<
+  ActionResponse<{_id:string,name:string,count:number}[]>> {
+  const validatedResult = await action({
+    params,
+    schema: GetUserTagsSchema,
+  });
+  if (validatedResult instanceof Error) {
+    return handleError(validatedResult) as ErrorResponse;
+  }
+  const {userId}=await validatedResult.params!;
+  try {
+    const pipeline:PipelineStage[]=[
+      {$match:{author:new Types.ObjectId(userId)}},
+      {$unwind:'$tags'},
+      {$group:{_id:'$tags',count:{$sum:1}}},
+      {$lookup:{
+        from:'tags',
+        foreignField:'_id',
+        localField:'_id',
+        as:'tagInfo'
+      }},
+      {$unwind:'$tagInfo'},
+      {$sort:{count:-1}},
+      {$limit:10},
+      {$project:{
+        _id:"$tagInfo._id",
+        name:"$tagInfo.name",
+        count:1
+      }}
+    ]
+    const tags=await Question.aggregate(pipeline);
+    return {
+      success: true,
+      data:JSON.parse(JSON.stringify(tags))
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;

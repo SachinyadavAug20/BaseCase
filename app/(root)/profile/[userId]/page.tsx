@@ -5,6 +5,7 @@ import {
   getUser,
   getUserAnswers,
   getUserQuestions,
+  getUserTags,
 } from "@/lib/actions/user.action";
 import { RouteParamas } from "@/types/global";
 import { notFound } from "next/navigation";
@@ -19,6 +20,8 @@ import QuestionCard from "@/components/card/QuestionCard";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import AnswerCard from "@/components/card/AnswerCard";
+import { EMPTY_TAGS } from "@/constant/states";
+import TagCard from "@/components/card/TagCard";
 
 const page = async ({ params, searchParams }: RouteParamas) => {
   const { userId } = await params;
@@ -52,6 +55,11 @@ const page = async ({ params, searchParams }: RouteParamas) => {
     pageSize: pageSize ? Number(pageSize) : 10,
   });
   const { answers, isNext: answerIsNext } = userAnswerData!;
+  const {
+    success: userTopTagsSuccess,
+    data: tags,
+    error: userTopTagsError,
+  } = await getUserTags({ userId });
   const {
     name,
     username,
@@ -203,6 +211,19 @@ const page = async ({ params, searchParams }: RouteParamas) => {
           <h3 className="h3-bold text-dark200_light900">Top Tech</h3>
           <div className="mt-7 flex flex-col gap-4 ">
             <p>List of tags</p>
+            <DataRenderer
+              error={userTopTagsError}
+              data={tags}
+              sucess={userTopTagsSuccess}
+              empty={EMPTY_TAGS}
+              render={(tags) => (
+                <div className="mt-3 flex w-full flex-col gap-4">
+                  {tags.map((tag) => (
+                    <TagCard key={tag._id} _id={tag._id} name={tag.name} questions={tag.count} showCount={true} compact={true}/>
+                  ))}
+                </div>
+              )}
+            />
           </div>
         </div>
       </section>

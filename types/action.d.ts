@@ -76,3 +76,6 @@ interface GetUserQuestionsParams
 interface GetUserAnswersParams extends Omit<PaginatedSearchParams, "query"> {
   userId: string;
 }
+interface GetUserTagsParams{
+  userId:string
+}

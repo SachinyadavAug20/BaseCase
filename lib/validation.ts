@@ -1,4 +1,5 @@
 import { Question } from "@/dataBase";
+import { InteractionActionEnums } from "@/dataBase/interactions.model";
 import { filter } from "@mdxeditor/editor";
 import z from "zod";
 
@@ -241,3 +242,10 @@ export const DeleteItemSchema=z.object({
   itemId:z.string().min(1,{message:"ID is required"}),
   type:z.string().min(1,{message:"Type is required"})
 })
+
+export const CreateInteractionSchema = z.object({
+  action: z.enum(InteractionActionEnums),
+  actionTarget: z.enum(["question", "answer"]),
+  actionId: z.string().min(1),
+  authorId: z.string().min(1),
+});

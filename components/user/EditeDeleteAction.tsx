@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constant/routes";
+import { deleteUserItem } from "@/lib/actions/user.action";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -30,11 +31,13 @@ const EditeDeleteAction = ({ type, itemId }: Props) => {
   const handleDelete = async () => {
     if(type==='question'){
       // call api action to delete question
+      await deleteUserItem({itemId,type});
       toast.success("Question deleted successfully",{
         description: "Your question has been deleted successfully"
       })
     }else if(type==='answer'){
       // call api action to delete question
+      await deleteUserItem({itemId,type});
       toast.success("Answer deleted successfully",{
         description: "Your Answer has been deleted successfully"
       })
@@ -74,7 +77,7 @@ const EditeDeleteAction = ({ type, itemId }: Props) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel className="btn">Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="border-primary-100! bg-primary-100! text-light-800!">Continue</AlertDialogAction>
+            <AlertDialogAction onClick={handleDelete} className="border-primary-100! bg-primary-100! text-light400_light600!">Continue</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

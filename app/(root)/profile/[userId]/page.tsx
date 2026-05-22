@@ -164,7 +164,11 @@ const page = async ({ params, searchParams }: RouteParamas) => {
                 render={(questions) => (
                   <div className="flex w-full flex-col gap-6">
                     {questions.map((question) => (
-                      <QuestionCard key={question?._id} question={question} />
+                      <QuestionCard
+                        key={question?._id}
+                        question={question}
+                        showActionBtn={question.author._id === loggedInUser?.user?.id}
+                      />
                     ))}
                   </div>
                 )}
@@ -190,13 +194,14 @@ const page = async ({ params, searchParams }: RouteParamas) => {
                   },
                 }}
                 render={(answers) => (
-                  <div className="flex w-full flex-col gap-6">
+                  <div className="flex w-full flex-col gap-10">
                     {answers.map((answer) => (
                       <AnswerCard
                         key={answer._id}
                         {...answer}
                         content={answer.content.slice(0, 27) + "..."} // not show long content
                         showReadMore={true}
+                        showActionBtn={answer.author._id === loggedInUser?.user?.id}
                         containerClasses="card-wrapper rounded-[10px] px-7 py-9 sm:px-11"
                       />
                     ))}
@@ -219,7 +224,14 @@ const page = async ({ params, searchParams }: RouteParamas) => {
               render={(tags) => (
                 <div className="mt-3 flex w-full flex-col gap-4">
                   {tags.map((tag) => (
-                    <TagCard key={tag._id} _id={tag._id} name={tag.name} questions={tag.count} showCount={true} compact={true}/>
+                    <TagCard
+                      key={tag._id}
+                      _id={tag._id}
+                      name={tag.name}
+                      questions={tag.count}
+                      showCount={true}
+                      compact={true}
+                    />
                   ))}
                 </div>
               )}

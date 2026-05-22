@@ -7,21 +7,40 @@ import Preview from "../editor/preview";
 import { Suspense } from "react";
 import Votes from "../votes/votes";
 import { hasVoted } from "@/lib/actions/vote.action";
+import EditeDeleteAction from "../user/EditeDeleteAction";
 
-interface Props extends IAnswer{
-  containerClasses?:string,
-  showReadMore?:boolean
+interface Props extends IAnswer {
+  containerClasses?: string;
+  showReadMore?: boolean;
+  showActionBtn?: boolean;
 }
 
-const AnswerCard = ({ _id, author, content, createdAt,upvotes,downvotes,question,containerClasses, showReadMore=false }: Props) => {
-
+const AnswerCard = ({
+  _id,
+  author,
+  content,
+  createdAt,
+  upvotes,
+  downvotes,
+  question,
+  containerClasses,
+  showReadMore = false,
+  showActionBtn = false,
+}: Props) => {
   const hasVotedPromise = hasVoted({
     targetId: _id,
     targetType: "answer",
   });
   return (
-    <article className={`light-border border-b py-10 w-full ${containerClasses}`}>
+    <article
+      className={`light-border border-b py-10 w-full ${containerClasses} relative`}
+    >
       <span id={`answer-${_id}`} className="hash-span" />
+      {showActionBtn && (
+        <div className="background-light800 flex-center absolute right-1 top-1 size-9 rounded-full ">
+          <EditeDeleteAction itemId={_id} type="answer" />
+        </div>
+      )}
       <div className="mb-5 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
         <div className="flex flex-1 items-center gap-1">
           <UserAvatar
@@ -44,20 +63,25 @@ const AnswerCard = ({ _id, author, content, createdAt,upvotes,downvotes,question
           </Link>
         </div>
         <div className="flex justify-end">
-            <Suspense fallback={<div>Loading...</div>}>
-              <Votes
-                targetType='answer'
-                targetId={_id}
-                upvotes={upvotes}
-                downvotes={downvotes}
-                hasVotedPromise={hasVotedPromise}
-              />
-            </Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Votes
+              targetType="answer"
+              targetId={_id}
+              upvotes={upvotes}
+              downvotes={downvotes}
+              hasVotedPromise={hasVotedPromise}
+            />
+          </Suspense>
         </div>
       </div>
       <Preview content={content} />
       {showReadMore && (
-        <Link href={`${ROUTES.QUESTIONS}/${question}#answer-${_id}`} className="body-semibold relative z-10 font-logofont text-primary-500"><p className="mt-1">Read more...</p></Link>
+        <Link
+          href={`${ROUTES.QUESTIONS}/${question}#answer-${_id}`}
+          className="body-semibold relative z-10 font-logofont text-primary-500"
+        >
+          <p className="mt-1">Read more...</p>
+        </Link>
       )}
     </article>
   );

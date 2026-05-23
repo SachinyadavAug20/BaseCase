@@ -86,7 +86,7 @@ const page = async ({ params, searchParams }: RouteParamas) => {
           <div className="mt-3">
             <h2 className="h2-bold text-dark100_light900">{name}</h2>
             <p className="paragraph-regular text-dark200_light800">
-              @{username}
+              @{username} | Rep: {reputation}
             </p>
             <div className="mt-5 flex flex-wrap items-center justify-start gap-5">
               {portfolio && (

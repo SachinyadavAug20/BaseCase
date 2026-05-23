@@ -21,6 +21,8 @@ import { success } from "zod/v4";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constant/routes";
 import { createInteraction } from "./interaction.action";
+import { after } from "next/server";
+
 
 export async function updateVoteCount(
   params: UpdateVoteCountParams,

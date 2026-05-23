@@ -30,6 +30,7 @@ import { revalidatePath } from "next/cache";
 import ROUTES from "@/constant/routes";
 import dbConnect from "../mongoose";
 import { createInteraction } from "./interaction.action";
+import { after } from "next/server";
 
 export async function createQuestion(
   params: createQuestionParams,

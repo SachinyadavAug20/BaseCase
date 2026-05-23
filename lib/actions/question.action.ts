@@ -36,6 +36,8 @@ import { after } from "next/server";
 import { Interaction } from "@/dataBase";
 import { Type } from "lucide-react";
 import { unique } from "next/dist/build/utils";
+import { success } from "zod/v4";
+import { auth } from "@/auth";
 
 export async function createQuestion(
   params: createQuestionParams,
@@ -221,8 +223,26 @@ export async function getQuestions(
   const skip = (Number(page) - 1) * Number(pageSize);
   const limit = Number(pageSize);
   const filterQuery: FilterQuery<typeof Question> = {};
-  if (filter == "recomended")
-    return { success: true, data: { questions: [], isNext: false } }; // skip recomended system
+  if (filter === "recommeded") {
+    const session = await auth();
+    const userId = session?.user?.id;
+
+    if (!userId) {
+      return { success: true, data: { questions: [], isNext: false } };
+    }
+
+    const recommended = await getRecommendedQuestions({
+      userId,
+      query,
+      skip,
+      limit,
+    });
+    if(!recommended){
+      return handleError(recommended) as ErrorResponse
+    }
+    return { success: true, data: recommended };
+  }
+
   if (query) {
     filterQuery.$or = [
       { title: { $regex: query, $options: "i" } },
@@ -350,7 +370,7 @@ export async function getRecommendedQuestions(params: RecommendationParams) {
     .skip(skip)
     .limit(limit);
   return {
-    questions: JSON.parse(JSON.stringify(question)),
-    isNext: question.length + skip < totalQuestions,
+      questions: JSON.parse(JSON.stringify(question)),
+      isNext: question.length + skip < totalQuestions,
   };
 }

@@ -6,11 +6,6 @@ import { cn } from "@/lib/utils";
 import { formUrlQuery, removeUrlQuery } from "@/lib/url";
 
 const filter = [
-  {name:"React",value:"react"},
-  {name:"JavaScript",value:"javascript"},
-  {name:"Next",value:"next"},
-  {name:"Performance",value:"performance"},
-  {name:"Programming",value:"programming"},
   { name: "Newest", value: "newest" },
   { name: "Popular", value: "popular" },
   { name: "Unanswered", value: "unanswered" },

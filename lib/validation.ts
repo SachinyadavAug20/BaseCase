@@ -1,6 +1,7 @@
 import { Question } from "@/dataBase";
 import { InteractionActionEnums } from "@/dataBase/interactions.model";
 import { filter } from "@mdxeditor/editor";
+import { skipMiddlewareFunction } from "mongoose";
 import z from "zod";
 
 export const SignInSchema = z.object({
@@ -248,4 +249,11 @@ export const CreateInteractionSchema = z.object({
   actionTarget: z.enum(["question", "answer"]),
   actionId: z.string().min(1),
   authorId: z.string().min(1),
+});
+
+export const RecommendationSchema = z.object({
+  userId: z.string().min(1,{message:"User ID is required"}),
+  query:z.string().optional(),
+  skip:z.number(),
+  limit:z.number(),
 });

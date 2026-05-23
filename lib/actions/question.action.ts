@@ -5,6 +5,7 @@ import {
   editQuestionParams,
   getQuestionParams,
   IncrementViewsParams,
+  RecommendationParams,
 } from "@/types/action";
 import {
   ActionResponse,
@@ -19,9 +20,10 @@ import {
   getQuestionSchema,
   IncrementViewsSchema,
   PaginatedSearchParamsSchema,
+  RecommendationSchema,
 } from "../validation";
 import handleError from "../handlers/error";
-import mongoose, { FilterQuery } from "mongoose";
+import mongoose, { FilterQuery, Types } from "mongoose";
 import Question, { IQuestionDoc } from "@/dataBase/question.model";
 import Tag, { ITag, ITagDoc } from "@/dataBase/tag.model";
 import TagQuestion from "@/dataBase/tag-question.model";
@@ -31,6 +33,9 @@ import ROUTES from "@/constant/routes";
 import dbConnect from "../mongoose";
 import { createInteraction } from "./interaction.action";
 import { after } from "next/server";
+import { Interaction } from "@/dataBase";
+import { Type } from "lucide-react";
+import { unique } from "next/dist/build/utils";
 
 export async function createQuestion(
   params: createQuestionParams,
@@ -191,7 +196,9 @@ export async function getQuestion(
   }
   const { questionId } = validationResult.params!;
   try {
-    const question = await Question.findById(questionId).populate("tags").populate("author","_id name image");
+    const question = await Question.findById(questionId)
+      .populate("tags")
+      .populate("author", "_id name image");
     if (!question) throw new NotFoundError("Question");
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
@@ -257,37 +264,93 @@ export async function getQuestions(
   }
 }
 
-export async function incrementViews(params: IncrementViewsParams):Promise<ActionResponse<{views:number}>>{
+export async function incrementViews(
+  params: IncrementViewsParams,
+): Promise<ActionResponse<{ views: number }>> {
   const validationResult = await action({
-  params,
-  schema:IncrementViewsSchema,
-  })
-  if(validationResult instanceof Error){
+    params,
+    schema: IncrementViewsSchema,
+  });
+  if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
-  const {questionId}=validationResult.params!;
-  try{
-    const question=await Question.findById(questionId);
-    if(!question) throw new NotFoundError("Question");
-    question.views+=1;
+  const { questionId } = validationResult.params!;
+  try {
+    const question = await Question.findById(questionId);
+    if (!question) throw new NotFoundError("Question");
+    question.views += 1;
     await question.save();
-    return {success:true,data:{views:question.views}}
-  }catch(error){
+    return { success: true, data: { views: question.views } };
+  } catch (error) {
     return handleError(error) as ErrorResponse;
   }
-
 }
 
-export async function getHotQuestion():Promise<ActionResponse<IQuestion[]>>{
-  try{
+export async function getHotQuestion(): Promise<ActionResponse<IQuestion[]>> {
+  try {
     await dbConnect();
-    const questions=await Question.find().sort({views:-1,upvotes:-1}).limit(5);
+    const questions = await Question.find()
+      .sort({ views: -1, upvotes: -1 })
+      .limit(5);
     return {
-      success:true,
-      data:JSON.parse(JSON.stringify(questions)),
-    }
-  }catch(error){
-    return handleError(error) as ErrorResponse
+      success: true,
+      data: JSON.parse(JSON.stringify(questions)),
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
   }
+}
 
+export async function getRecommendedQuestions(params: RecommendationParams) {
+  const validationResult = await action({
+    params,
+    schema: RecommendationSchema,
+  });
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+  const { userId, query, skip, limit } = params;
+  const interaction = await Interaction.find({
+    user: new Types.ObjectId(userId),
+    actionType: "question",
+    action: { $in: ["view", "upvote", "bookmark", "post"] },
+  })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(50)
+    .lean(); // convert to json
+
+  const interactionIds = interaction.map((i) => i.actionId);
+  const interactedQuestion = await Question.find({
+    _id: { $in: interactionIds },
+  }).select("tags");
+  const allTags = interactedQuestion.flatMap((q) =>
+    q.tags.map((tag: Types.ObjectId) => tag.toString()),
+  );
+  // flatMap
+  // arr =[[c,cpp],[node,js]]
+  // arr.flatMap((a) => a) => [c,cpp,node,js]
+  const uniqueTagIds = [...new Set(allTags)]; // unique ids
+  const recommendedQuery: FilterQuery<typeof Question> = {
+    _id: { $nin: interactionIds },
+    author: { $ne: new Types.ObjectId(userId) },
+    tags: { $in: uniqueTagIds.map((id) => new Types.ObjectId(id)) },
+  };
+  if (query) {
+    recommendedQuery.$or = [
+      { title: { $regex: query, $options: "i" } },
+      { content: { $regex: query, $options: "i" } },
+    ];
+  }
+  const totalQuestions = await Question.countDocuments(recommendedQuery);
+  const question = await Question.find(recommendedQuery)
+    .populate("tags", "name")
+    .populate("author", "name image")
+    .sort({ upvotes: -1, views: -1 })
+    .skip(skip)
+    .limit(limit);
+  return {
+    questions: JSON.parse(JSON.stringify(question)),
+    isNext: question.length + skip < totalQuestions,
+  };
 }

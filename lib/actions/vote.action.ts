@@ -20,6 +20,7 @@ import { Answers, Question, Vote } from "@/dataBase";
 import { success } from "zod/v4";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constant/routes";
+import { createInteraction } from "./interaction.action";
 
 export async function updateVoteCount(
   params: UpdateVoteCountParams,
@@ -118,6 +119,14 @@ export async function createVote(
         session,
       );
     }
+    after(async () => {
+      await createInteraction({
+        action: voteType,
+        actionId: targetId,
+        actionTarget: targetType,
+        authorId: userId,
+      });
+    });
     await session.commitTransaction();
     return { success: true };
   } catch (error) {

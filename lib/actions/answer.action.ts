@@ -11,6 +11,7 @@ import { Question } from "@/dataBase";
 import { NotFoundError } from "../http-error";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constant/routes";
+import { createInteraction } from "./interaction.action";
 
 export async function createAnswer(
   params: CreateAnswerParams,
@@ -38,6 +39,13 @@ export async function createAnswer(
     if (!newAnswer) throw new Error("Failed to create answer");
     question.answers += 1;
     await question.save({ session });
+    after(async ()=>{ // response send and then create interaction
+      await createInteraction({
+        action: "post",
+        actionId: newAnswer._id.toString(),
+        actionTarget: "answer",
+        authorId: userId as string,
+    })})
     await session.commitTransaction();
     revalidatePath(`${ROUTES.QUESTIONS}/${questionId}`);
     return { success: true, data: JSON.parse(JSON.stringify(newAnswer)) };

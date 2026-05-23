@@ -90,13 +90,12 @@ async function updateReputation(params: UpdateReputationParams) {
       break;
   }
 
-  if (performerId === authorId) {
+  if (performerId === authorId) { // not self-repo farm
     await User.findByIdAndUpdate(
       performerId,
       { $inc: { reputation: authorPoints } },
       { session },
     );
-
     return;
   }
 

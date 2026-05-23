@@ -29,6 +29,7 @@ import { NotFoundError } from "../http-error";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constant/routes";
 import dbConnect from "../mongoose";
+import { createInteraction } from "./interaction.action";
 
 export async function createQuestion(
   params: createQuestionParams,
@@ -73,6 +74,14 @@ export async function createQuestion(
       { $push: { tags: { $each: tagIds } } },
       { session },
     );
+    after(async () => {
+      await createInteraction({
+        action: "post",
+        actionId: newQuestion._id.toString(),
+        actionTarget: "question",
+        authorId: userId as string,
+      });
+    });
     await session.commitTransaction();
     return { success: true, data: JSON.parse(JSON.stringify(newQuestion)) };
   } catch (error) {

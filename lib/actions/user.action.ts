@@ -36,6 +36,7 @@ import ROUTES from "@/constant/routes";
 import mongoose from "mongoose";
 import { Tag } from "@/dataBase";
 import { Vote } from "@/dataBase";
+import { createInteraction } from "./interaction.action";
 
 export async function getUsers(
   params: PaginatedSearchParams,
@@ -274,19 +275,43 @@ export async function deleteUserItem(
           { $inc: { questions: -1 } },
         ).session(session);
       }
-      const answer=await Answers.find({question:itemId}).session(session);
-      if(answer.length>0){
-        const answers=await Answers.find({question:itemId}).session(session);
-        const ids = answers.map(a => a._id);
-        await Answers.deleteMany({question:itemId}).session(session);
-        await Vote.deleteMany({ id: {$in:ids},type:'answer'}).session(session);
+      const answer = await Answers.find({ question: itemId }).session(session);
+      if (answer.length > 0) {
+        const answers = await Answers.find({ question: itemId }).session(
+          session,
+        );
+        const ids = answers.map((a) => a._id);
+        await Answers.deleteMany({ question: itemId }).session(session);
+        await Vote.deleteMany({ id: { $in: ids }, type: "answer" }).session(
+          session,
+        );
       }
     }
-    await Vote.deleteMany({ id: itemId,type:type }).session(session);
+    await Vote.deleteMany({ id: itemId, type: type }).session(session);
     await Model.deleteOne({ _id: itemId }).session(session);
 
-    revalidatePath(`${ROUTES.PROFILE}/${user?.id}`);
+    if (type === "question") {
+      after(async () => {
+        await createInteraction({
+          action: "delete",
+          actionId: itemId,
+          actionTarget: "question",
+          authorId: user?.id as string,
+        });
+      });
+    }
+    if (type === "answer") {
+      after(async () => {
+        await createInteraction({
+          action: "delete",
+          actionId: itemId,
+          actionTarget: "answer",
+          authorId: user?.id as string,
+        });
+      });
+    }
     session.commitTransaction();
+    revalidatePath(`${ROUTES.PROFILE}/${user?.id}`);
     return { success: true, data: {} };
   } catch (error) {
     session.abortTransaction();

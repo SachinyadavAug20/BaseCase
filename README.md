@@ -2,6 +2,11 @@
 
 Stackoverflow for students to ask for help with coding.
 
+
+as of 23-5-2026 : Implemented badges system and criteria to get badges
+
+![screenshot](Documentation/screenshots/20.png)  
+
 as of 22-5-2026 : User Profile page full implementated
 
 ![screenshot](Documentation/screenshots/19.png)  

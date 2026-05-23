@@ -5,6 +5,7 @@ import {
   getUser,
   getUserAnswers,
   getUserQuestions,
+  getUserStats,
   getUserTags,
 } from "@/lib/actions/user.action";
 import { RouteParamas } from "@/types/global";
@@ -71,6 +72,7 @@ const page = async ({ params, searchParams }: RouteParamas) => {
     createdAt,
     bio,
   } = user!;
+  const {data:userStats}=await getUserStats({userId})
 
   return (
     <>
@@ -123,9 +125,9 @@ const page = async ({ params, searchParams }: RouteParamas) => {
         </div>
       </section>
       <Stats
-        totalQuestions={totalQuestions!}
-        totalAnswers={totalAnswers!}
-        badges={{
+        totalQuestions={userStats?.totalQuestions || 0}
+        totalAnswers={userStats?.totalAnswers || 0}
+        badges={userStats?.badges||{
           GOLD: 0,
           SILVER: 0,
           BRONZE: 0,

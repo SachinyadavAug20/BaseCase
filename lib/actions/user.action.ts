@@ -2,6 +2,7 @@
 
 import {
   ActionResponse,
+  BadgeCounts,
   ErrorResponse,
   IAnswer,
   IQuestion,
@@ -38,6 +39,7 @@ import { Tag } from "@/dataBase";
 import { Vote } from "@/dataBase";
 import { createInteraction } from "./interaction.action";
 import { after } from "next/server";
+import { assignBadges } from "../utils";
 
 export async function getUsers(
   params: PaginatedSearchParams,
@@ -320,4 +322,71 @@ export async function deleteUserItem(
   } finally {
     session.endSession();
   }
+}
+
+export async function getUserStats(
+  params: GetUserParams,
+): Promise<ActionResponse<{
+  totalQuestions: number;
+  totalAnswers: number;
+  badges: BadgeCounts;
+}>> {
+  const validationResult = await action({
+    params,
+    schema: GetUserSchema,
+  });
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+  const { userId } = validationResult.params!;
+  const user = await User.findById(userId);
+  if (!user) return handleError(new NotFoundError("User")) as ErrorResponse;
+  try {
+    const [questionStats] = await Question.aggregate([
+      { $match: { author: new Types.ObjectId(userId) } },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+          upvotes: { $sum: "$upvotes" },
+          views: { $sum: "$views" },
+        },
+      },
+    ]);
+
+    const [answerStats] = await Answers.aggregate([
+      { $match: { author: new Types.ObjectId(userId) } },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 },
+          upvotes: { $sum: "$upvotes" },
+        },
+      },
+    ]);
+
+    const badges = assignBadges({
+      criteria: [
+        { type: "ANSWER_COUNT", count: answerStats.count },
+        { type: "QUESTION_COUNT", count: questionStats.count },
+        {
+          type: "QUESTION_UPVOTES",
+          count: questionStats.upvotes + answerStats.upvotes,
+        },
+        { type: "TOTAL_VIEWS", count: questionStats.views },
+      ],
+    });
+
+    return {
+      success: true,
+      data: {
+        totalQuestions: questionStats.count,
+        totalAnswers: answerStats.count,
+        badges,
+      },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+
 }

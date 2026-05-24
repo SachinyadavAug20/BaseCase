@@ -7,16 +7,9 @@ const loading = () => {
   return (
     <>
       <section className="w-full flex flex-col-reverse sm:flex-row justify-between gap-4 sm:items-center">
-        <h1 className="h1-bold text-dark100_light900">All Questions</h1>
-        <Button
-          className="primary-gradient min-h-11.5 px-4 py-3 text-light-900!"
-          asChild
-        >
-          <Link href={ROUTES.ASKQUESTION}>Ask a Question</Link>
-        </Button>
+        <h1 className="h1-bold flex text-dark100_light900 gap-3"><Skeleton className="h-12 w-25" /> Questions</h1>
       </section>
       <section className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
-        <Skeleton className="h-14 flex-1" />
         <Skeleton className="h-14 w-28" />
       </section>
       <div className="mt-10 flex w-full flex-col gap-6">

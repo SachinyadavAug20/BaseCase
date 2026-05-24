@@ -22,7 +22,7 @@ const page = async ({ params,searchParams }: RouteParamas) => {
   return (
     <div>
       <h2 className="h2-bold text-dark100_light900 w-full flex gap-13 items-center ml-2 justify-between">
-        <span className="text-dark400_light600">{tag?.name.toUpperCase()}</span>
+        <span className="text-dark400_light600">{tag?.name.toUpperCase()}{" Questions"}</span>
         <i className={`${getDevIcon(tag?.name)} text-2xl`} aria-hidden="true" />
       </h2>
 

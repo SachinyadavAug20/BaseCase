@@ -140,3 +140,17 @@ export async function getPopularTags():Promise<ActionResponse<ITag[]>>{
     return handleError(error) as ErrorResponse
   }
 }
+
+export const getTagById=async (tagId:string):Promise<ActionResponse<ITag>>=>{
+  try {
+    await dbConnect();
+    const tag=await Tag.findById(tagId)
+    if(!tag) throw new Error("Tag not found")
+    return{
+      success:true,
+      data:JSON.parse(JSON.stringify(tag))
+    }
+  } catch (error) {
+    return handleError(error) as ErrorResponse
+  }
+}

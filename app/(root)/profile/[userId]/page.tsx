@@ -23,6 +23,49 @@ import Pagination from "@/components/Pagination";
 import AnswerCard from "@/components/card/AnswerCard";
 import { EMPTY_TAGS } from "@/constant/states";
 import TagCard from "@/components/card/TagCard";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: RouteParamas): Promise<Metadata> {
+  const { userId: id } = await params;
+
+  const { success, data, error } = await getUser({ userId:id });
+  if (!success || !data) {
+    return {
+      title: "User not found | baseCase",
+      description: "This user is not available on our platform",
+    };
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+
+  return {
+    title:`${data.user.name} | BaseCase`,
+    description: `${data.user?.bio}.BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.`,
+    openGraph: {
+      title:`${data.user.name} | BaseCase`,
+      description: `${data.user?.bio}.BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.`,
+      url: `${siteUrl}/${ROUTES.PROFILE}/${id}`,
+      type: "profile",
+      siteName: "BaseCase",
+      images: [
+        {
+          url: "/images/site-logo.svg",
+          width: 1200,         
+          height: 630,        
+          alt: data.user.name,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title:`${data.user.name} | BaseCase`,
+      description: `${data.user?.bio}.BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.`,
+      images:[{url:"/images/site-logo.svg"}]
+    },
+  };
+}
 
 const page = async ({ params, searchParams }: RouteParamas) => {
   const { userId } = await params;

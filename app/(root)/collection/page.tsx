@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import QuestionCard from "@/components/card/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filters/CommonFilter";
@@ -8,12 +7,19 @@ import { CollectionFilters } from "@/constant/filter";
 import ROUTES from "@/constant/routes";
 import { EMPTY_COLLECTIONS } from "@/constant/states";
 import { getSavedQuestions } from "@/lib/actions/collection.action"
+import { Metadata } from "next";
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 
+export const metadata: Metadata = {
+  title: "Collection | BaseCase",
+  description:"BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.",
+  icons: {
+    icon: "/images/site-logo.svg",
+  },
+};
 const page = async ( { searchParams }: SearchParams) => {
-  const session=await auth();
   const { page, pageSize, query, filter } = await searchParams;
   const {success,data,error}=await getSavedQuestions({
     page: Number(page) || 1,

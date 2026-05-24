@@ -8,7 +8,15 @@ import ROUTES from "@/constant/routes";
 import { EMPTY_COLLECTIONS, EMPTY_USERS } from "@/constant/states";
 import { getUsers } from "@/lib/actions/user.action";
 import { RouteParamas } from "@/types/global";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Community | BaseCase",
+  description:"BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.",
+  icons: {
+    icon: "/images/site-logo.svg",
+  },
+};
 const page = async ({ searchParams }: RouteParamas) => {
   const { page, pageSize, query, filter } = await searchParams;
   const { success, data, error } = await getUsers({

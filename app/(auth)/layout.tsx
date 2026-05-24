@@ -1,7 +1,15 @@
 import SocialAuthForm from "@/components/forms/socialAuthForm";
+import { Metadata } from "next";
 import Image from "next/image";
 import React from "react";
 
+export const metadata: Metadata = {
+  title: "Auth | BaseCase",
+  description:"BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.",
+  icons: {
+    icon: "/images/site-logo.svg",
+  },
+};
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="flex min-h-screen min-w-full items-center justify-center bg-(image:--bg-auth-light) dark:bg-(image:--bg-auth-dark) bg-center bg-no-repeat bg-cover px-4 py-8">
@@ -15,7 +23,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
             className="object-contain"
           />
           <div className="space-y-2.5">
-            <h1 className="h2-bold text-dark100_light900">Join Devflow</h1>
+            <h1 className="h2-bold text-dark100_light900">Join BaseCase</h1>
             <p className="paragraph-regular text-dark500_light400">
               To get your question answered
             </p>

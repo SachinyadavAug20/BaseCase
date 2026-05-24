@@ -12,11 +12,13 @@ const inter = localFont({
   variable: "--font-inter",
   weight: "100 200 300 400 500 600 700 800 900",
 });
+
 const diff = localFont({
   src: "./fonts/diff.ttf",
   variable: "--font-diff",
   weight: "100 200 300 400 500 600 700 800 900",
 });
+
 const logofont = localFont({
   src: "./fonts/logofont.ttf",
   variable: "--font-logofont",
@@ -25,6 +27,7 @@ const logofont = localFont({
 
 export const metadata: Metadata = {
   title: "BaseCase",
+  description:"BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.",
   icons: {
     icon: "/images/site-logo.svg",
   },

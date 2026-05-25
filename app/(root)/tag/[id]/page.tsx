@@ -70,7 +70,7 @@ const page = async ({ params, searchParams }: RouteParamas) => {
           {tag?.name.toUpperCase()}
           {" Questions"}
         </span>
-        <i className={`${getDevIcon(tag?.name)} text-2xl`} aria-hidden="true" />
+        <i className={`${getDevIcon(tag?.name ?? "")} text-2xl`} aria-hidden="true" />
       </h2>
 
       <section className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">

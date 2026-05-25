@@ -15,6 +15,7 @@ import { FilterQuery } from "mongoose";
 import { GetTagQuestionParams } from "@/types/action";
 import { Question } from "@/dataBase";
 import dbConnect from "../mongoose";
+import { cache } from "react";
 
 export const getTags = async (
   params: PaginatedSearchParams,
@@ -141,7 +142,8 @@ export async function getPopularTags():Promise<ActionResponse<ITag[]>>{
   }
 }
 
-export const getTagById=async (tagId:string):Promise<ActionResponse<ITag>>=>{
+export const getTagById=cache(
+ async function getTagById(tagId:string):Promise<ActionResponse<ITag>>{
   try {
     await dbConnect();
     const tag=await Tag.findById(tagId)
@@ -154,3 +156,4 @@ export const getTagById=async (tagId:string):Promise<ActionResponse<ITag>>=>{
     return handleError(error) as ErrorResponse
   }
 }
+)

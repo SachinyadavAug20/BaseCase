@@ -3,7 +3,6 @@ import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filters/CommonFilter";
 import Pagination from "@/components/Pagination";
 import { HomePageFilters, TagFilters } from "@/constant/filter";
-import { techDescriptions } from "@/constant/icon.constant";
 import ROUTES from "@/constant/routes";
 import { EMPTY_QUESTIONS } from "@/constant/states";
 import { getDevIcon, getTechDescription } from "@/constant/techmap";

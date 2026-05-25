@@ -29,7 +29,7 @@ import {
   GetUserTagsParams,
 } from "@/types/action";
 import { inspect } from "util";
-import { useId } from "react";
+import { cache, useId } from "react";
 import { NotFoundError, UnauthorizedError } from "../http-error";
 import { ITag, ITagDoc } from "@/dataBase/tag.model";
 import { revalidatePath } from "next/cache";
@@ -93,7 +93,9 @@ export async function getUsers(
   }
 }
 
-export async function getUser(params: GetUserParams): Promise<
+export const getUser=cache(
+
+async function getUser(params: GetUserParams): Promise<
   ActionResponse<{
     user: IUser;
     totalQuestions: number;
@@ -126,6 +128,8 @@ export async function getUser(params: GetUserParams): Promise<
     return handleError(error) as ErrorResponse;
   }
 }
+
+)
 
 export async function getUserQuestions(params: GetUserQuestionsParams): Promise<
   ActionResponse<{

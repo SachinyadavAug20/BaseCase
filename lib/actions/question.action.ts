@@ -38,6 +38,7 @@ import { Type } from "lucide-react";
 import { unique } from "next/dist/build/utils";
 import { success } from "zod/v4";
 import { auth } from "@/auth";
+import { cache } from "react";
 
 export async function createQuestion(
   params: createQuestionParams,
@@ -185,7 +186,7 @@ export async function editQuestion(
   }
 }
 
-export async function getQuestion(
+export const getQuestion = cache(async function getQuestion(
   params: getQuestionParams,
 ): Promise<ActionResponse<IQuestion>> {
   const validationResult = await action({
@@ -206,7 +207,7 @@ export async function getQuestion(
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
-}
+});
 
 export async function getQuestions(
   params: PaginatedSearchParams,
@@ -237,8 +238,8 @@ export async function getQuestions(
       skip,
       limit,
     });
-    if(!recommended){
-      return handleError(recommended) as ErrorResponse
+    if (!recommended) {
+      return handleError(recommended) as ErrorResponse;
     }
     return { success: true, data: recommended };
   }
@@ -370,7 +371,7 @@ export async function getRecommendedQuestions(params: RecommendationParams) {
     .skip(skip)
     .limit(limit);
   return {
-      questions: JSON.parse(JSON.stringify(question)),
-      isNext: question.length + skip < totalQuestions,
+    questions: JSON.parse(JSON.stringify(question)),
+    isNext: question.length + skip < totalQuestions,
   };
 }

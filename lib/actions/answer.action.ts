@@ -1,7 +1,7 @@
 "use server";
 
 import { CreateAnswerParams, GetAnswersParams } from "@/types/action";
-import { ActionResponse, ErrorResponse } from "@/types/global";
+import { ActionResponse, ErrorResponse, IAnswer } from "@/types/global";
 import Answers, { IAnswerDoc } from "@/dataBase/answer.model";
 import { AnswerServerSchema, GetAnswerSchema } from "../validation";
 import action from "../handlers/action";
@@ -61,7 +61,7 @@ export async function createAnswer(
 
 export async function GetAnswers(
   params: GetAnswersParams,
-): Promise<ActionResponse<{ answers: IAnswerDoc[];isNext:boolean; totalAnswers: number }>> {
+): Promise<ActionResponse<{ answers: IAnswer[];isNext:boolean; totalAnswers: number }>> {
   const validationResult = await action({
     params,
     schema: GetAnswerSchema,

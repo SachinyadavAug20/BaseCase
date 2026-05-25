@@ -27,7 +27,7 @@ const page = async ( { searchParams }: SearchParams) => {
     query: query || "",
     filter: filter || "",
   });
-  const {_id,questions}=data?.Collection!;
+  const {questions}=data?.Collection!;
   return (
     <>
       <section className="w-full flex flex-col-reverse sm:flex-row justify-between gap-4 sm:items-center">
@@ -43,7 +43,6 @@ const page = async ( { searchParams }: SearchParams) => {
         />
         <CommonFilter filters={CollectionFilters} otherClasses="min-h-[56px] sm:min-w-[170px] "/>
       </section>
-      {/*<HomeFilter />*/}
       <div className="mt-10 flex w-full flex-col gap-6">
         <DataRenderer
           sucess={success}

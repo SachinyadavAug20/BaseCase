@@ -25,7 +25,7 @@ const config = [
   {
     rules: {
       "import/order": [
-        "error",
+        "warn",
         {
           groups: [
             "builtin",

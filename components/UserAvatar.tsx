@@ -1,7 +1,6 @@
 import ROUTES from "@/constant/routes";
 import Link from "next/link";
 import { Avatar } from "./ui/avatar";
-import Image from "next/image";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
 interface Props {

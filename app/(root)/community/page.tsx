@@ -5,14 +5,15 @@ import Pagination from "@/components/Pagination";
 import LocalSearch from "@/components/search/LocalSearch";
 import { UserFilters } from "@/constant/filter";
 import ROUTES from "@/constant/routes";
-import { EMPTY_COLLECTIONS, EMPTY_USERS } from "@/constant/states";
+import { EMPTY_USERS } from "@/constant/states";
 import { getUsers } from "@/lib/actions/user.action";
 import { RouteParamas } from "@/types/global";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Community | BaseCase",
-  description:"BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.",
+  description:
+    "BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.",
   icons: {
     icon: "/images/site-logo.svg",
   },
@@ -25,28 +26,39 @@ const page = async ({ searchParams }: RouteParamas) => {
     query,
     filter,
   });
-  const {users}=data||{}
-  return( <div>
-    <h1 className="h1-bold text-dark100_light900">All Users</h1>
-    <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
-      <LocalSearch route={ROUTES.COMMUNITY} iconsPosition="left" imgSrc="/icons/search.svg" placeholder="Search some great devs..." otherClasses="flex-1"/>
-      <CommonFilter filters={UserFilters} otherClasses="min-h-[56px] sm:min-w-[170px]"/>
+  const { users } = data || {};
+  return (
+    <div>
+      <h1 className="h1-bold text-dark100_light900">All Users</h1>
+      <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
+        <LocalSearch
+          route={ROUTES.COMMUNITY}
+          iconsPosition="left"
+          imgSrc="/icons/search.svg"
+          placeholder="Search some great devs..."
+          otherClasses="flex-1"
+        />
+        <CommonFilter
+          filters={UserFilters}
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
+        />
+      </div>
+      <DataRenderer
+        sucess={success}
+        error={error}
+        empty={EMPTY_USERS}
+        data={users}
+        render={(users) => (
+          <div className="mt-12 flex flex-wrap gap-5">
+            {users.map((u) => (
+              <UserCard key={u._id} {...u} />
+            ))}
+          </div>
+        )}
+      />
+      <Pagination page={page} isNext={data?.isNext || false} />
     </div>
-    <DataRenderer
-      sucess={success}
-      error={error}
-      empty={EMPTY_USERS}
-      data={users}
-      render={(users) =>(
-        <div className="mt-12 flex flex-wrap gap-5">
-          {users.map((u)=>(
-            <UserCard key={u._id} {...u}/>
-          ))}
-        </div>
-      )}
-    />
-      <Pagination page={page} isNext={data?.isNext || false}/>
-  </div>);
+  );
 };
 
 export default page;

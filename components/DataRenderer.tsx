@@ -75,8 +75,8 @@ const DataRenderer = <T,>({
   empty = DEFAULT_EMPTY,
   render,
 }: Props<T>) => {
-  if(!sucess) 
-    return(
+  if (!sucess)
+    return (
       <StateSkeleton
         image={{
           light: "/images/error.png",
@@ -84,11 +84,14 @@ const DataRenderer = <T,>({
           alt: "error state illustration",
         }}
         title={error?.message || DEFAULT_ERROR.title}
-        message={error?.details?JSON.stringify(error.details):DEFAULT_ERROR.message}
+        message={
+          error?.details ? JSON.stringify(error.details) : DEFAULT_ERROR.message
+        }
         button={empty.button}
       />
-  )
-  if (!data || data.length === 0) return (
+    );
+  if (!data || data.length === 0)
+    return (
       <StateSkeleton
         image={{
           light: "/images/no-question-found.png",
@@ -100,11 +103,7 @@ const DataRenderer = <T,>({
         button={empty.button}
       />
     );
-  return <>{render?render(data):(
-    data.map((d)=>(
-      <div>Data point </div>
-    ))
-  )}</>;
+  return <>{render ? render(data) : <div>Data render not found!! </div>}</>;
 };
 
 export default DataRenderer;

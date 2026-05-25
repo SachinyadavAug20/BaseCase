@@ -24,19 +24,14 @@ import {
 } from "../validation";
 import handleError from "../handlers/error";
 import mongoose, { FilterQuery, Types } from "mongoose";
-import Question, { IQuestionDoc } from "@/dataBase/question.model";
+import Question from "@/dataBase/question.model";
 import Tag, { ITag, ITagDoc } from "@/dataBase/tag.model";
 import TagQuestion from "@/dataBase/tag-question.model";
 import { NotFoundError } from "../http-error";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constant/routes";
 import dbConnect from "../mongoose";
 import { createInteraction } from "./interaction.action";
 import { after } from "next/server";
 import { Interaction } from "@/dataBase";
-import { Type } from "lucide-react";
-import { unique } from "next/dist/build/utils";
-import { success } from "zod/v4";
 import { auth } from "@/auth";
 import { cache } from "react";
 
@@ -103,7 +98,7 @@ export async function createQuestion(
 
 export async function editQuestion(
   params: editQuestionParams,
-): Promise<ActionResponse<IQuestionDoc>> {
+): Promise<ActionResponse<IQuestion>> {
   const validationResult = await action({
     params,
     schema: EditQuestionSchema,
@@ -322,13 +317,13 @@ export async function getHotQuestion(): Promise<ActionResponse<IQuestion[]>> {
   }
 }
 
-export async function getRecommendedQuestions(params: RecommendationParams) {
+export async function getRecommendedQuestions(params: RecommendationParams):Promise<{questions: IQuestion[]|[],isNext: boolean}> {
   const validationResult = await action({
     params,
     schema: RecommendationSchema,
   });
   if (validationResult instanceof Error) {
-    return handleError(validationResult) as ErrorResponse;
+    return {questions:[],isNext: false};
   }
   const { userId, query, skip, limit } = params;
   const interaction = await Interaction.find({

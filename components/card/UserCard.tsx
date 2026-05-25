@@ -8,9 +8,6 @@ const UserCard = ({
   name,
   image,
   username,
-  bio,
-  reputation,
-  portfolio,
 }: IUser) => {
   return (
     <div className="shadow-light100_darknone w-full xs:w-[230px]">

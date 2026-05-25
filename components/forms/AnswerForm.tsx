@@ -27,7 +27,7 @@ interface Props {
   questionTitle: string;
   questionContent: string;
 }
-const AnswerForm = ({ questionId, questionTitle, questionContent}: Props) => {
+const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
   const [isAnswering, startAnsweringTransition] = useTransition();
   const [isAISubmitting, setIsAISubmiting] = useState(false); // for modify answer
   const session = useSession();
@@ -65,12 +65,12 @@ const AnswerForm = ({ questionId, questionTitle, questionContent}: Props) => {
       });
     }
     setIsAISubmiting(true);
-    const userAnswer=editorRef.current?.getMarkdown();
+    const userAnswer = editorRef.current?.getMarkdown();
     try {
-      const { success, data, error } = api.ai.getAnswer(
+      const { success, data, error } = await api.ai.getAnswer(
         questionTitle,
         questionContent,
-        userAnswer
+        userAnswer,
       );
       if (!success) {
         return toast.error("Error", {
@@ -78,7 +78,10 @@ const AnswerForm = ({ questionId, questionTitle, questionContent}: Props) => {
         });
       }
 
-      const formattedAnswer = data.replace(/<br>/g, " ").toString().trim();
+      let formattedAnswer = "";
+      if (typeof data === "string") {
+        formattedAnswer = data.replace(/<br>/g, " ").trim();
+      }
       if (editorRef.current) {
         editorRef.current.setMarkdown(formattedAnswer);
         form.setValue("content", formattedAnswer);
@@ -112,7 +115,7 @@ const AnswerForm = ({ questionId, questionTitle, questionContent}: Props) => {
         >
           {isAISubmitting ? (
             <>
-              <ReloadIcon className="mr-2 size-4 animate-spin" /> Generating... 
+              <ReloadIcon className="mr-2 size-4 animate-spin" /> Generating...
             </>
           ) : (
             <>

@@ -1,8 +1,7 @@
-"use client"
+"use client";
 import { formUrlQuery } from "@/lib/url";
 import { Button } from "./ui/button";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface Props {
   page?: number | string | undefined;
@@ -11,36 +10,40 @@ interface Props {
 }
 
 const Pagination = ({ page = 1, isNext, containerClasses = "" }: Props) => {
-  const router=useRouter();
-  const searchParams=useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleNavigation = (type: "prev" | "next") => {
     const nextpage = type === "prev" ? Number(page) - 1 : Number(page) + 1;
-    
-    const newUrl=formUrlQuery({params:searchParams.toString(),key:"page",value:nextpage.toString()})
-    router.push(newUrl,{scroll:false});
+
+    const newUrl = formUrlQuery({
+      params: searchParams.toString(),
+      key: "page",
+      value: nextpage.toString(),
+    });
+    router.push(newUrl, { scroll: false });
   };
   return (
     <div
       className={`flex w-full items-center justify-center mt-5 gap-2 ${containerClasses}`}
     >
-        <Button
-          disabled={Number(page)>1?false:true}
-          onClick={() => handleNavigation("prev")}
-          className="light-border-2 btn min-h-9 flex items-center justify-center gap-2 border"
-        >
-          <p className="body-medium text-dark200_light800 ">Prev</p>
-        </Button>
+      <Button
+        disabled={!(Number(page) > 1)}
+        onClick={() => handleNavigation("prev")}
+        className="light-border-2 btn min-h-9 flex items-center justify-center gap-2 border"
+      >
+        <p className="body-medium text-dark200_light800 ">Prev</p>
+      </Button>
       <div className="flex items-center justify-center rounded-md bg-primary-500 px-3.5 py-2">
         <p className="body-semibold text-light-900">{page}</p>
       </div>
-        <Button
-          disabled={isNext?false:true}
-          onClick={() => handleNavigation("next")}
-          className="light-border-2 btn min-h-9 flex items-center justify-center gap-2 border"
-        >
-          <p className="body-medium text-dark200_light800 ">Next</p>
-        </Button>
+      <Button
+        disabled={!isNext}
+        onClick={() => handleNavigation("next")}
+        className="light-border-2 btn min-h-9 flex items-center justify-center gap-2 border"
+      >
+        <p className="body-medium text-dark200_light800 ">Next</p>
+      </Button>
     </div>
   );
 };

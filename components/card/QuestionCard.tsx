@@ -6,12 +6,12 @@ import Metric from "../ui/Metric";
 import { IQuestion } from "@/types/global";
 import EditeDeleteAction from "../user/EditeDeleteAction";
 
-const QuestionCard = ({ question: { _id, title,content, tags, author, createdAt, upvotes, downvotes, answers, views, },showActionBtn=false }: { question:IQuestion,showActionBtn?:Boolean }) => {
+const QuestionCard = ({ question: { _id, title, tags, author, createdAt, upvotes,  answers, views, },showActionBtn=false }: { question:IQuestion,showActionBtn?:boolean }) => {
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
       <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-center">
         <div className="flex-1">
-          <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden"> {/* only for small screen*/}
+          <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden"> 
             {getsTimeStamp(createdAt)}
           </span>
           <Link href={`${ROUTES.QUESTIONS}/${_id}`}>

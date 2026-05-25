@@ -4,7 +4,7 @@ import dbConnect from "@/lib/mongoose";
 import { SigInWithOAuthSchema } from "@/lib/validation";
 import { APIErrorResponse } from "@/types/global";
 import User from "@/dataBase/user.model";
-import mongoose, { Mongoose } from "mongoose";
+import mongoose from "mongoose";
 import slugify from "slugify";
 import Account from "@/dataBase/account.model";
 import { NextResponse } from "next/server";

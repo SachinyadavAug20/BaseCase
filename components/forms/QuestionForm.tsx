@@ -2,14 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import {
-  Controller,
-  DefaultValues,
-  FieldValue,
-  Path,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -21,7 +14,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { AskQuestionSchema, EditQuestionSchema } from "@/lib/validation";
+import { AskQuestionSchema } from "@/lib/validation";
 import { useRef, useTransition } from "react";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import dynamic from "next/dynamic";
@@ -259,7 +252,7 @@ const QuestionForm = ({ question, isEdit = false }: Params) => {
                 <span>Submitting</span>
               </>
             ) : (
-              <> {isEdit?"Edit Question":"Ask a Question"}</>
+              <> {isEdit ? "Edit Question" : "Ask a Question"}</>
             )}
           </Button>
         </div>

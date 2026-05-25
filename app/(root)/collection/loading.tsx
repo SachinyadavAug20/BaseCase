@@ -1,7 +1,4 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import ROUTES from "@/constant/routes";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 const loading = () => {
   return (

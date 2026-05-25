@@ -18,7 +18,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DataRenderer from "@/components/DataRenderer";
 import ROUTES from "@/constant/routes";
 import QuestionCard from "@/components/card/QuestionCard";
-import Image from "next/image";
 import Pagination from "@/components/Pagination";
 import AnswerCard from "@/components/card/AnswerCard";
 import { EMPTY_TAGS } from "@/constant/states";
@@ -30,7 +29,7 @@ export async function generateMetadata({
 }: RouteParamas): Promise<Metadata> {
   const { userId: id } = await params;
 
-  const { success, data, error } = await getUser({ userId:id });
+  const { success, data } = await getUser({ userId: id });
   if (!success || !data) {
     return {
       title: "User not found | baseCase",
@@ -38,13 +37,13 @@ export async function generateMetadata({
     };
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
   return {
-    title:`${data.user.name} | BaseCase`,
+    title: `${data.user.name} | BaseCase`,
     description: `${data.user?.bio}.BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.`,
     openGraph: {
-      title:`${data.user.name} | BaseCase`,
+      title: `${data.user.name} | BaseCase`,
       description: `${data.user?.bio}.BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.`,
       url: `${siteUrl}/${ROUTES.PROFILE}/${id}`,
       type: "profile",
@@ -52,17 +51,17 @@ export async function generateMetadata({
       images: [
         {
           url: "/images/site-logo.svg",
-          width: 1200,         
-          height: 630,        
+          width: 1200,
+          height: 630,
           alt: data.user.name,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title:`${data.user.name} | BaseCase`,
+      title: `${data.user.name} | BaseCase`,
       description: `${data.user?.bio}.BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.`,
-      images:[{url:"/images/site-logo.svg"}]
+      images: [{ url: "/images/site-logo.svg" }],
     },
   };
 }
@@ -77,7 +76,7 @@ const page = async ({ params, searchParams }: RouteParamas) => {
       <div className="h1-bold text-dark100_light900">{error?.message}</div>
     );
   }
-  const { totalQuestions, totalAnswers, user } = data || {};
+  const { user } = data || {};
   const { page, pageSize } = await searchParams;
   const {
     success: userQuestionSuccess,
@@ -115,7 +114,7 @@ const page = async ({ params, searchParams }: RouteParamas) => {
     createdAt,
     bio,
   } = user!;
-  const {data:userStats}=await getUserStats({userId})
+  const { data: userStats } = await getUserStats({ userId });
 
   return (
     <>
@@ -170,11 +169,13 @@ const page = async ({ params, searchParams }: RouteParamas) => {
       <Stats
         totalQuestions={userStats?.totalQuestions || 0}
         totalAnswers={userStats?.totalAnswers || 0}
-        badges={userStats?.badges||{
-          GOLD: 0,
-          SILVER: 0,
-          BRONZE: 0,
-        }}
+        badges={
+          userStats?.badges || {
+            GOLD: 0,
+            SILVER: 0,
+            BRONZE: 0,
+          }
+        }
       />
       <section className="mt-10 flex gap-10">
         <Tabs defaultValue="top-post" className="flex-2">
@@ -212,7 +213,9 @@ const page = async ({ params, searchParams }: RouteParamas) => {
                       <QuestionCard
                         key={question?._id}
                         question={question}
-                        showActionBtn={question.author._id === loggedInUser?.user?.id}
+                        showActionBtn={
+                          question.author._id === loggedInUser?.user?.id
+                        }
                       />
                     ))}
                   </div>
@@ -244,9 +247,11 @@ const page = async ({ params, searchParams }: RouteParamas) => {
                       <AnswerCard
                         key={answer._id}
                         {...answer}
-                        content={answer.content.slice(0, 27) + "..."} // not show long content
+                        content={answer.content.slice(0, 27) + "..."}
                         showReadMore={true}
-                        showActionBtn={answer.author._id === loggedInUser?.user?.id}
+                        showActionBtn={
+                          answer.author._id === loggedInUser?.user?.id
+                        }
                         containerClasses="card-wrapper rounded-[10px] px-7 py-9 sm:px-11"
                       />
                     ))}

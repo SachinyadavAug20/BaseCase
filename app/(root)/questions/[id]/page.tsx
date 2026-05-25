@@ -31,27 +31,27 @@ export async function generateMetadata({
     };
   }
   const cleanDescription = question.content
-    .replace(/[#*`_\[\]]/g, "") // Simple regex to strip basic markdown if needed
+    .replace(/[#*`_[\]]/g, "") // Simple regex to strip basic markdown if needed
     .replace(/<[^>]*>/g, "") // Strips HTML tags if it's rich text
     .trim();
 
   const title = `${question.title} | BaseCase`;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
   return {
     title,
     description: cleanDescription.slice(0, 150),
     openGraph: {
       title,
-      description:cleanDescription.slice(0,150),
+      description: cleanDescription.slice(0, 150),
       url: `${siteUrl}/${ROUTES.QUESTIONS}/${id}`,
       type: "article",
       siteName: "BaseCase",
       images: [
         {
           url: "/images/site-logo.svg",
-          width: 1200,         
-          height: 630,        
+          width: 1200,
+          height: 630,
           alt: question.title,
         },
       ],
@@ -60,7 +60,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description: cleanDescription.slice(0, 100),
-      images:[{url:"/images/site-logo.svg"}]
+      images: [{ url: "/images/site-logo.svg" }],
     },
   };
 }

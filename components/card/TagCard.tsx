@@ -9,10 +9,10 @@ interface Props {
   _id: string;
   name: string;
   questions?: number;
-  showCount?: Boolean;
-  compact?: Boolean;
-  remove?: Boolean;
-  isButton?: Boolean;
+  showCount?: boolean;
+  compact?: boolean;
+  remove?: boolean;
+  isButton?: boolean;
   handleRemove?: () => void;
 }
 

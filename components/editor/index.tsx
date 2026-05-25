@@ -41,7 +41,7 @@ interface Props {
 
 const Editor = ({ value, fieldchange, editorRef, ...props }: Props) => {
   const { resolvedTheme } = useTheme();
-  const theme = resolvedTheme === "dark" ? [basicDark] : {};
+  const theme = resolvedTheme === "dark" ? [basicDark] : [];
 
   return (
     <MDXEditor

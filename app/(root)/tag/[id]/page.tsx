@@ -2,7 +2,7 @@ import QuestionCard from "@/components/card/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filters/CommonFilter";
 import Pagination from "@/components/Pagination";
-import { HomePageFilters, TagFilters } from "@/constant/filter";
+import { HomePageFilters } from "@/constant/filter";
 import ROUTES from "@/constant/routes";
 import { EMPTY_QUESTIONS } from "@/constant/states";
 import { getDevIcon, getTechDescription } from "@/constant/techmap";
@@ -15,7 +15,7 @@ export async function generateMetadata({
 }: RouteParamas): Promise<Metadata> {
   const { id } = await params;
 
-  const { success, data, error } = await getTagById(id);
+  const { success, data } = await getTagById(id);
   if (!success || !data) {
     return {
       title: "Tag not found | baseCase",
@@ -62,7 +62,7 @@ const page = async ({ params, searchParams }: RouteParamas) => {
     filter,
     query,
   });
-  const { tag, questions, isNext } = data || {};
+  const { tag, questions} = data || {};
   return (
     <div>
       <h2 className="h2-bold text-dark100_light900 w-full flex gap-13 items-center ml-2 justify-between">
@@ -70,7 +70,10 @@ const page = async ({ params, searchParams }: RouteParamas) => {
           {tag?.name.toUpperCase()}
           {" Questions"}
         </span>
-        <i className={`${getDevIcon(tag?.name ?? "")} text-2xl`} aria-hidden="true" />
+        <i
+          className={`${getDevIcon(tag?.name ?? "")} text-2xl`}
+          aria-hidden="true"
+        />
       </h2>
 
       <section className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">

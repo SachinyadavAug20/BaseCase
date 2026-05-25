@@ -100,7 +100,11 @@ const DataRenderer = <T,>({
         button={empty.button}
       />
     );
-  return <>{render(data)}</>;
+  return <>{render?render(data):(
+    data.map((d)=>(
+      <div>Data point </div>
+    ))
+  )}</>;
 };
 
 export default DataRenderer;

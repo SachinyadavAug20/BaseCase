@@ -17,7 +17,7 @@ import { after } from "next/server";
 
 export async function createAnswer(
   params: CreateAnswerParams,
-): Promise<ActionResponse<IAnswerDoc>> {
+): Promise<ActionResponse<IAnswer>> {
   const validationResult = await action({
     params: params,
     schema: AnswerServerSchema,

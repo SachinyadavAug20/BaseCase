@@ -76,7 +76,7 @@ interface IUser {
 interface CollectionResponse {
   _id: string;
   author:string | Author;
-  questions:Question[]
+  questions:IQuestion[]
 }
 
 interface BadgeCounts{

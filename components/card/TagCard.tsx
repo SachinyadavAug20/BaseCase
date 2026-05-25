@@ -4,7 +4,6 @@ import { Badge } from "../ui/badge";
 import Link from "next/link";
 import Image from "next/image";
 import { getTechDescription } from "@/constant/techmap";
-import { Question } from "@/dataBase";
 
 interface Props {
   _id: string;

@@ -59,7 +59,7 @@ const RightSideBar = async () => {
               return (
                 <TagCard
                   key={e.name}
-                  _id={e.name}
+                  _id={e._id}
                   name={e.name}
                   questions={Number(e.questions)}
                   showCount={true}

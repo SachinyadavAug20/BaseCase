@@ -1,5 +1,5 @@
 {
-  "name": "devflow",
+  "name": "BaseCase",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -73,7 +73,8 @@
     "prettier": "^3.4.2",
     "tailwindcss": "^4.2.2",
     "typescript": "^5",
-    "eslint-plugin-n": "^17.0.0"
+    "eslint-plugin-n": "^17.0.0",
+    "eslint-plugin-promise": "^7.0.0"
   },
   "packageManager": "npm@10.9.2",
   "overrides": {

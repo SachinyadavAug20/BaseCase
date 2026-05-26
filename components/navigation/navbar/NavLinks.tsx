@@ -1,10 +1,8 @@
 "use client"
 import sidebarLinks from "@/constant"
-import { Item } from "@radix-ui/react-dropdown-menu"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
 
 const NavLinks = ({isMobileNav=false,userId}:{isMobileNav?:boolean,userId?:string}) => {
   const pathname=usePathname()

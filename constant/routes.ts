@@ -16,6 +16,7 @@ const ROUTES = {
   DASHBOARD: "/dashboard",
   CREATE_POST: "/create-post",
   SIGN_IN_WITH_OAUTH: "/signin-with-oauth",
+  INTERNSHIP:"/internship",
 };
 export default ROUTES;
 

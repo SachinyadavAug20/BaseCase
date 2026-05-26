@@ -102,6 +102,11 @@ const sidebarLinks=[
     label: "Find Jobs",
   },
   {
+    imgURL: "/icons/suitcase.svg",
+    route: ROUTES.INTERNSHIP,
+    label: "Find internship",
+  },
+  {
     imgURL: "/icons/tag.svg",
     route: ROUTES.TAGS,
     label: "Tags",

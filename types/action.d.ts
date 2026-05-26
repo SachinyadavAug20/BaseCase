@@ -110,3 +110,8 @@ interface RecommendationParams{
   skip:number,
   limit:number,
 }
+
+interface intershipFilterParams{
+  query:string,
+  page:string // as will pass to url
+}

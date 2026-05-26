@@ -187,7 +187,6 @@ export const getQuestion = cache(async function getQuestion(
   const validationResult = await action({
     params,
     schema: getQuestionSchema,
-    authorize: true,
   });
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;

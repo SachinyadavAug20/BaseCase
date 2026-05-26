@@ -73,3 +73,28 @@ export function assignBadges(params: {
   });
   return badgeCounts;
 }
+
+export function processJobTitle(title: string | undefined | null): string {
+  if (title === undefined || title === null) {
+    return "No Job Title";
+  }
+
+  const words = title.split(" ");
+  const validWords = words.filter((word) => {
+    return (
+      word !== undefined &&
+      word !== null &&
+      word.toLowerCase() !== "undefined" &&
+      word.toLowerCase() !== "null"
+    );
+  });
+
+  if (validWords.length === 0) {
+    return "No Job Title";
+  }
+
+  const processedTitle = validWords.join(" ");
+
+  return processedTitle;
+}
+

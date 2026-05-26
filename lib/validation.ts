@@ -1,7 +1,3 @@
-import { Question } from "@/dataBase";
-import { InteractionActionEnums } from "@/dataBase/interactions.model";
-import { filter } from "@mdxeditor/editor";
-import { skipMiddlewareFunction } from "mongoose";
 import z from "zod";
 
 export const SignInSchema = z.object({
@@ -199,61 +195,74 @@ export const AIAnswerSchema = z.object({
   content: z
     .string()
     .min(100, { message: "Answer must be at least 100 characters" }),
-  userAnswer: z
-    .string()
-    .optional()
+  userAnswer: z.string().optional(),
 });
 
-export const CreateVoteSchema=z.object({
-  targetId:z.string().min(1,{message:"Target ID is required"}),
-  targetType:z.enum(["question","answer"],{message:"Invalid target type"}),
-  voteType:z.enum(["upvote","downvote"],{message:"Invalid vote type"}),
-})
+export const CreateVoteSchema = z.object({
+  targetId: z.string().min(1, { message: "Target ID is required" }),
+  targetType: z.enum(["question", "answer"], {
+    message: "Invalid target type",
+  }),
+  voteType: z.enum(["upvote", "downvote"], { message: "Invalid vote type" }),
+});
 
-export const UpdateVoteCountSchema=CreateVoteSchema.extend({
-  change:z.number().int().min(-1,{message:"Invalid change value"}).max(1,{message:"Invalid change value"}),
-})
+export const UpdateVoteCountSchema = CreateVoteSchema.extend({
+  change: z
+    .number()
+    .int()
+    .min(-1, { message: "Invalid change value" })
+    .max(1, { message: "Invalid change value" }),
+});
 
-export const HasVotedSchema=CreateVoteSchema.pick({
-  targetId:true,
-  targetType:true
-})
+export const HasVotedSchema = CreateVoteSchema.pick({
+  targetId: true,
+  targetType: true,
+});
 
-export const CollectionBasedSchema=z.object({
-  questionId:z.string().min(1,{message:"Question ID is required"}),
-})
+export const CollectionBasedSchema = z.object({
+  questionId: z.string().min(1, { message: "Question ID is required" }),
+});
 
-export const GetUserSchema=z.object({
-  userId:z.string().min(1,{message:"User ID is required"})
-})
+export const GetUserSchema = z.object({
+  userId: z.string().min(1, { message: "User ID is required" }),
+});
 
-export const GetUserQuestionsSchema=PaginatedSearchParamsSchema.extend({
-  userId:z.string().min(1,{message:"User ID is required"}),
-})
+export const GetUserQuestionsSchema = PaginatedSearchParamsSchema.extend({
+  userId: z.string().min(1, { message: "User ID is required" }),
+});
 
-export const GetUserAnswersSchema=PaginatedSearchParamsSchema.extend({
-  userId:z.string().min(1,{message:"User ID is required"}),
-})
+export const GetUserAnswersSchema = PaginatedSearchParamsSchema.extend({
+  userId: z.string().min(1, { message: "User ID is required" }),
+});
 
-export const GetUserTagsSchema=z.object({
-  userId:z.string().min(1,{message:"User ID is required"}),
-})
+export const GetUserTagsSchema = z.object({
+  userId: z.string().min(1, { message: "User ID is required" }),
+});
 
-export const DeleteItemSchema=z.object({
-  itemId:z.string().min(1,{message:"ID is required"}),
-  type:z.string().min(1,{message:"Type is required"})
-})
+export const DeleteItemSchema = z.object({
+  itemId: z.string().min(1, { message: "ID is required" }),
+  type: z.string().min(1, { message: "Type is required" }),
+});
 
 export const CreateInteractionSchema = z.object({
-  action: z.enum(InteractionActionEnums),
+  action: z.enum([
+    "view",
+    "upvote",
+    "downvote",
+    "bookmark",
+    "post",
+    "edit",
+    "delete",
+    "search",
+  ]),
   actionTarget: z.enum(["question", "answer"]),
   actionId: z.string().min(1),
   authorId: z.string().min(1),
 });
 
 export const RecommendationSchema = z.object({
-  userId: z.string().min(1,{message:"User ID is required"}),
-  query:z.string().optional(),
-  skip:z.number(),
-  limit:z.number(),
+  userId: z.string().min(1, { message: "User ID is required" }),
+  query: z.string().optional(),
+  skip: z.number(),
+  limit: z.number(),
 });

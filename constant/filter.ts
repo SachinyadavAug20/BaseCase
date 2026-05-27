@@ -32,3 +32,10 @@ export const UserFilters = [
   { name: "Popular", value: "popular" },
 ];
 
+export const GlobalSearchFilters = [
+  { name: "Question", value: "question" },
+  { name: "Answer", value: "answer" },
+  { name: "User", value: "user" },
+  { name: "Tag", value: "tag" },
+];
+

@@ -99,4 +99,10 @@ interface BadgeCounts{
   BRONZE:number
 }
 
+interface GlobalSearchItem{
+  id:string,
+  type:"question" | "answer"|"user"|"tag",
+  title:string
+}
+
 // Record<string,string> means key value pair of string:string

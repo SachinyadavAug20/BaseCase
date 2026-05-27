@@ -1,25 +1,28 @@
-import {Code} from 'bright'
-import {MDXRemote} from 'next-mdx-remote/rsc'
+import { Code } from 'bright'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
-Code.theme={
-  light:"github-light",
-  dark:"github-dark",
-  lightSelector:"html.light",
+Code.theme = {
+  light: "github-light",
+  dark: "github-dark",
+  lightSelector: "html.light",
 }
 
-const Preview = ({content}:{content:string}) => {
-  const formmatedContent=content.replace(/\\/g,'').replace(/&#x20;/g,'');// remove blacks
+const Preview = ({ content }: { content: string }) => {
+  const formattedContent = content.replace(/\\/g, '').replace(/&#x20;/g, '')
 
   return (
-    <section className='markdown prose grid break-words'>
-      <MDXRemote
-        source={formmatedContent}
+    <section className="markdown prose grid break-words">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
         components={{
-          pre:(props)=>(
-            <Code {...props} lineNumbers className='shadow-light-200 dark:shadow-dark-200'/>
-          )
+          pre: (props) => (
+            <Code {...props} lineNumbers className="shadow-light-200 dark:shadow-dark-200" />
+          ),
         }}
-      />
+      >
+        {formattedContent}
+      </ReactMarkdown>
     </section>
   )
 }

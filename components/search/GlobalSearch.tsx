@@ -15,13 +15,13 @@ const GlobalSearch = () => {
   const query = searchParams.get("query");
   const [search, setSearch] = useState(query || "");
   const [isOpen, setIsOpen] = useState(query || false);
-  const searchContainerRef = useRef(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleOutSideClick = (event: MouseEvent) => {
       if (
         searchContainerRef.current &&
-        !searchContainerRef.current?.contains(event.target)
+        !searchContainerRef.current?.contains(event.target as Node)
       ) {
         setIsOpen(false);
         setSearch("");
@@ -77,6 +77,6 @@ const GlobalSearch = () => {
       {isOpen && <GlobalResult />}
     </div>
   );
-;
+};
 
 export default GlobalSearch;

@@ -266,3 +266,9 @@ export const RecommendationSchema = z.object({
   skip: z.number(),
   limit: z.number(),
 });
+
+export const GlobalSearchSchema=z.object({
+
+  query:z.string(),
+  type:z.string().nullable().optional()
+})

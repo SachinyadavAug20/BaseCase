@@ -1,6 +1,6 @@
 "use server";
 
-import { Answer, Question, Tag, User } from "@/database";
+import { Answers, Question, Tag, User } from "@/dataBase";
 
 import action from "../handlers/action";
 import handleError from "../handlers/error";
@@ -28,7 +28,7 @@ export async function globalSearch(params: GlobalSearchParams) {
     const modelsAndTypes = [
       { model: Question, searchField: "title", type: "question" },
       { model: User, searchField: "name", type: "user" },
-      { model: Answer, searchField: "content", type: "answer" },
+      { model: Answers, searchField: "content", type: "answer" },
       { model: Tag, searchField: "name", type: "tag" },
     ];
 

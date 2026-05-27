@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
 import { auth } from "@/auth";
 import { SessionProvider } from "next-auth/react";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = localFont({
   src: "./fonts/interFont.ttf",
@@ -27,7 +28,8 @@ const logofont = localFont({
 
 export const metadata: Metadata = {
   title: "BaseCase",
-  description:"BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.",
+  description:
+    "BaseCase is a free, open-source, and community-driven platform for developers to share their knowledge and expertise in a simple and easy-to-use format.",
   icons: {
     icon: "/images/site-logo.svg",
   },
@@ -70,6 +72,7 @@ const RootLayout = async ({
           </ThemeProvider>
         </SessionProvider>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );

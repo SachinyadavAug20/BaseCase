@@ -17,6 +17,7 @@ import {
   GetUserSchema,
   GetUserTagsSchema,
   PaginatedSearchParamsSchema,
+  UpdateUserSchema,
 } from "../validation";
 import handleError from "../handlers/error";
 import { FilterQuery, PipelineStage, Types } from "mongoose";
@@ -27,6 +28,7 @@ import {
   GetUserParams,
   GetUserQuestionsParams,
   GetUserTagsParams,
+  UpdateUserParams,
 } from "@/types/action";
 import { inspect } from "util";
 import { cache, useId } from "react";
@@ -93,9 +95,9 @@ export async function getUsers(
   }
 }
 
-export const getUser=cache(
-
-async function getUser(params: GetUserParams): Promise<
+export const getUser = cache(async function getUser(
+  params: GetUserParams,
+): Promise<
   ActionResponse<{
     user: IUser;
     totalQuestions: number;
@@ -127,9 +129,7 @@ async function getUser(params: GetUserParams): Promise<
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
-}
-
-)
+});
 
 export async function getUserQuestions(params: GetUserQuestionsParams): Promise<
   ActionResponse<{
@@ -328,13 +328,13 @@ export async function deleteUserItem(
   }
 }
 
-export async function getUserStats(
-  params: GetUserParams,
-): Promise<ActionResponse<{
-  totalQuestions: number;
-  totalAnswers: number;
-  badges: BadgeCounts;
-}>> {
+export async function getUserStats(params: GetUserParams): Promise<
+  ActionResponse<{
+    totalQuestions: number;
+    totalAnswers: number;
+    badges: BadgeCounts;
+  }>
+> {
   const validationResult = await action({
     params,
     schema: GetUserSchema,
@@ -392,5 +392,29 @@ export async function getUserStats(
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
+}
 
+export async function UpdateUser(
+  params: UpdateUserParams,
+): Promise<ActionResponse<{ user: IUser }>> {
+  const validationResult = await action({
+    params,
+    schema: UpdateUserSchema,
+    authorize: true,
+  });
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+  const { user } = validationResult.session!;
+  try {
+    const updatedUser = await User.findByIdAndUpdate(user?.id, params, {
+      new: true,
+    });
+    return {
+      success: true,
+      data: { user: JSON.parse(JSON.stringify(updatedUser)) },
+    };
+  } catch (er) {
+    return handleError(er) as ErrorResponse;
+  }
 }

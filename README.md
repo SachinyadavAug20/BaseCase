@@ -2,6 +2,9 @@
 
 Stackoverflow for students to ask for help with coding.
 
+as of 23-5-2026 : Bio, protofilo and location editable profile page
+
+![screenshot](Documentation/screenshots/21.png)  
 
 as of 23-5-2026 : Implemented badges system and criteria to get badges
 

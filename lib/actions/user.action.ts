@@ -346,7 +346,7 @@ export async function getUserStats(params: GetUserParams): Promise<
   const user = await User.findById(userId);
   if (!user) return handleError(new NotFoundError("User")) as ErrorResponse;
   try {
-    const [questionStats] = await Question.aggregate([
+    const [questionStatsRaw] = await Question.aggregate([
       { $match: { author: new Types.ObjectId(userId) } },
       {
         $group: {
@@ -358,7 +358,7 @@ export async function getUserStats(params: GetUserParams): Promise<
       },
     ]);
 
-    const [answerStats] = await Answers.aggregate([
+    const [answerStatsRaw] = await Answers.aggregate([
       { $match: { author: new Types.ObjectId(userId) } },
       {
         $group: {
@@ -368,6 +368,9 @@ export async function getUserStats(params: GetUserParams): Promise<
         },
       },
     ]);
+
+    const questionStats = questionStatsRaw ?? { count: 0, upvotes: 0, views: 0 };
+    const answerStats = answerStatsRaw ?? { count: 0, upvotes: 0 };
 
     const badges = assignBadges({
       criteria: [

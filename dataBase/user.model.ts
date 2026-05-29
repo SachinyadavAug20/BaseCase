@@ -3,6 +3,7 @@ import { model, Schema } from "mongoose";
 import { models } from "mongoose"; // gives all instance of model already created
 
 export interface IUser {
+  _id?:string,
   name: string;
   username: string;
   email: string;

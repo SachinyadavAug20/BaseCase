@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import ProfileForm from "@/components/forms/ProfileForm";
 import ROUTES from "@/constant/routes";
-import { IUser } from "@/dataBase/user.model";
+import { IUser, IUserDoc } from "@/dataBase/user.model";
 import { getUser } from "@/lib/actions/user.action";
 import { redirect } from "next/navigation";
 
@@ -13,7 +13,7 @@ const page =async () => {
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Edit Profile</h1>
-      <ProfileForm user={data?.user as IUser} />
+      <ProfileForm user={data?.user as IUserDoc} />
     </>
   )
 }

@@ -121,7 +121,7 @@ const page = async ({ params, searchParams }: RouteParamas) => {
       <section className="flex flex-col-reverse items-start justify-between sm:flex-row!">
         <div className="flex flex-col items-start gap-4 lg:flex-row">
           <UserAvatar
-            id={_id}
+            id={_id.toString()}
             imageUrl={image}
             name={name}
             className="size-[140px] rounded-full object-cover"
@@ -156,7 +156,7 @@ const page = async ({ params, searchParams }: RouteParamas) => {
           </div>
         </div>
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3">
-          {loggedInUser?.user?.id === _id && (
+          {(loggedInUser?.user?.id?.toString() === _id.toString()) && (
             <Link href="/profile/edit">
               <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-12 min-w-44 px-4 py-3">
                 Edit Profile

@@ -42,6 +42,7 @@ import { Vote } from "@/dataBase";
 import { createInteraction } from "./interaction.action";
 import { after } from "next/server";
 import { assignBadges } from "../utils";
+import { IUserDoc } from "@/dataBase/user.model";
 
 export async function getUsers(
   params: PaginatedSearchParams,
@@ -99,7 +100,7 @@ export const getUser = cache(async function getUser(
   params: GetUserParams,
 ): Promise<
   ActionResponse<{
-    user: IUser;
+    user: IUserDoc;
     totalQuestions: number;
     totalAnswers: number;
   }>

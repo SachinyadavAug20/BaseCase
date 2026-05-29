@@ -1,5 +1,5 @@
 "use client";
-import { IUser } from "@/dataBase/user.model";
+import { IUser, IUserDoc } from "@/dataBase/user.model";
 import { UpdateUser } from "@/lib/actions/user.action";
 import { ProfileSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,7 +21,7 @@ const Editor = dynamic(() => import("@/components/editor"), {
   ssr: false,
 });
 
-const ProfileForm = ({ user }: { user: IUser }) => {
+const ProfileForm = ({ user }: { user: IUserDoc }) => {
   const router = useRouter();
   const editorRef = useRef<MDXEditorMethods>(null);
   const [isPending, startTransaction] = useTransition();

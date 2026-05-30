@@ -8,6 +8,7 @@ import ROUTES from "@/constant/routes";
 import { EMPTY_COLLECTIONS } from "@/constant/states";
 import { getSavedQuestions } from "@/lib/actions/collection.action"
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
@@ -27,6 +28,10 @@ const page = async ( { searchParams }: SearchParams) => {
     query: query || "",
     filter: filter || "",
   });
+  if(!data || !success){
+    redirect(ROUTES.SIGN_IN)
+  }
+  
   const {questions}=data?.Collection!;
   return (
     <>

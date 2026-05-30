@@ -108,7 +108,7 @@ export async function getSavedQuestions(
     authorize: true,
   });
   if (validationResult instanceof Error) {
-    return handleError(validationResult) as ErrorResponse;
+      return { success: false, data: {Collection:{_id:"",author:"",questions:[]},isNext:false}, error: validationResult };
   }
   const { page = 1, pageSize = 10, query, filter } = validationResult.params!;
   const userId = validationResult.session?.user?.id;

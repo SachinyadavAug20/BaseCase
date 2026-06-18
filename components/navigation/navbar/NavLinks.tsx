@@ -3,6 +3,8 @@ import sidebarLinks from "@/constant";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import {useGSAP} from "@gsap/react"
+import gsap from "gsap";
 
 const NavLinks = ({
   isMobileNav = false,
@@ -11,6 +13,13 @@ const NavLinks = ({
   isMobileNav?: boolean;
   userId?: string;
 }) => {
+  useGSAP(()=>{
+    gsap.from("#nav-link",{
+      opacity:0,
+      y:100,
+      scale:1
+    })
+  })
   const pathname = usePathname();
   return (
     <div className="px-1">
@@ -26,6 +35,7 @@ const NavLinks = ({
 
         const linkComponent = (
           <Link
+            id="nav-link"
             href={link.route}
             key={link.label}
             className={`${

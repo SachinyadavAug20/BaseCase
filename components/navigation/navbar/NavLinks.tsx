@@ -17,7 +17,12 @@ const NavLinks = ({
     gsap.from("#nav-link",{
       opacity:0,
       y:100,
-      scale:1
+      x:-100,
+      scale:1,
+      stagger:0.1,
+      duration:0.3,
+      rotate:45,
+      ease:"back.out(1.9)",
     })
   })
   const pathname = usePathname();
@@ -59,7 +64,7 @@ const NavLinks = ({
               </p>
             )}
             {isMobileNav && (
-              <p className={`${isActive ? "base-bold" : "base-medium"}`}>
+              <p className={`${isActive ? "base-bold" : "base-medium"}`} id="nav-link-label">
                 {link.label}
               </p>
             )}

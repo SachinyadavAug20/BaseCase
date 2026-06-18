@@ -1,3 +1,4 @@
+"use Client";
 import { DEFAULT_EMPTY, DEFAULT_ERROR } from "@/constant/states";
 import { Button } from "./ui/button";
 import Image from "next/image";
@@ -103,7 +104,10 @@ const DataRenderer = <T,>({
         button={empty.button}
       />
     );
-  return <>{render ? render(data) : <div>Data render not found!! </div>}</>;
+    if(!render){
+      return <div>Data render not found!! </div>;
+    }
+  return render(data);
 };
 
 export default DataRenderer;

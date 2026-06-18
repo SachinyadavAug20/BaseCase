@@ -10,6 +10,8 @@ import QuestionCard from "@/components/card/QuestionCard";
 import CommonFilter from "@/components/filters/CommonFilter";
 import { HomePageFilters } from "@/constant/filter";
 import Pagination from "@/components/Pagination";
+import DRquestions from "@/components/datarenderes/DRquestions";
+import AnimatedList from "@/components/AnimatedList";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
@@ -57,16 +59,16 @@ export default async function Home({ searchParams }: SearchParams) {
           error={error}
           data={questions}
           empty={EMPTY_QUESTIONS}
-          render={(questions) =>
-            questions.map((q) => (
-              <div key={q._id}>
-                <QuestionCard question={q} />
-              </div>
-            ))
-          }
+          render={(questions) => (
+            <AnimatedList x={100} y={200}>
+              {questions.map((q) => (
+                <DRquestions q={q} key={q._id} />
+              ))}
+            </AnimatedList>
+          )}
         />
       </div>
-      <Pagination page={page} isNext={data?.isNext || false}/>
+      <Pagination page={page} isNext={data?.isNext || false} />
     </>
   );
 }

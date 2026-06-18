@@ -1,3 +1,4 @@
+"use client"
 import ROUTES from "@/constant/routes";
 import { getsTimeStamp } from "@/lib/utils";
 import Link from "next/link";
@@ -8,7 +9,7 @@ import EditeDeleteAction from "../user/EditeDeleteAction";
 
 const QuestionCard = ({ question: { _id, title, tags, author, createdAt, upvotes,  answers, views, },showActionBtn=false }: { question:IQuestion,showActionBtn?:boolean }) => {
   return (
-    <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
+    <div className="card-wrapper rounded-[10px] p-9 sm:px-11 question-card">
       <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:items-center">
         <div className="flex-1">
           <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden"> 

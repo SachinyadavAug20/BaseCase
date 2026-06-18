@@ -1,11 +1,12 @@
 "use client";
-
 import { formUrlQuery, removeUrlQuery } from "@/lib/url";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Input } from "../ui/input";
 import GlobalResult from "../GlobalResult";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 const GlobalSearch = () => {
   const router = useRouter();
@@ -48,6 +49,25 @@ const GlobalSearch = () => {
     return ()=> clearTimeout(delayDebounceFn);
   },[search,searchParams,router,router,query]);
 
+  const inputRefG = useRef<HTMLInputElement>(null);
+  useGSAP(() => {
+    gsap.from(".filterIconG", {
+      scale: 1.2,
+      duration: 0.8,
+      repeat: -1,
+      yoyo: true,
+      rotate: 20,
+      ease: "back.out(1.7)",
+    });
+    gsap.from(inputRefG.current, {
+      width: 0,
+      opacity: 0,
+      padding: 0,
+      duration: 1.5,
+      ease: "back.out(1)",
+      transformOrigin: "left center",
+    });
+  });
   return (
     <div
       className="relative w-full max-w-[600px] max-lg:hidden"
@@ -59,10 +79,11 @@ const GlobalSearch = () => {
           alt="search"
           width={24}
           height={24}
-          className="cursor-pointer"
+          className="cursor-pointer filterIconG"
         />
 
         <Input
+          ref={inputRefG}
           type="text"
           placeholder="Search anything globally..."
           value={search}

@@ -1,3 +1,4 @@
+import AnimatedList from "@/components/AnimatedList";
 import UserCard from "@/components/card/UserCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilter from "@/components/filters/CommonFilter";
@@ -49,11 +50,11 @@ const page = async ({ searchParams }: RouteParamas) => {
         empty={EMPTY_USERS}
         data={users}
         render={(users) => (
-          <div className="mt-12 flex flex-wrap gap-5">
+          <AnimatedList className="mt-12 flex flex-wrap gap-5">
             {users.map((u) => (
               <UserCard key={u._id} {...u} />
             ))}
-          </div>
+          </AnimatedList>
         )}
       />
       <Pagination page={page} isNext={data?.isNext || false} />

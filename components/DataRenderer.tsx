@@ -109,5 +109,4 @@ const DataRenderer = <T,>({
     }
   return render(data);
 };
-
 export default DataRenderer;

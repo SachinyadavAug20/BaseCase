@@ -27,7 +27,7 @@ const MobileNavbar = async () => {
             width={36}
             height={36}
             alt="Menu"
-            className="sm:hidden invert-colors"
+            className="cursor-pointer lg:hidden invert-colors"
           />
         </SheetTrigger>
         <SheetContent
@@ -41,19 +41,19 @@ const MobileNavbar = async () => {
           >
             <Image
               src="/images/site-logo.svg"
-              alt="Devflow logo"
+              alt="BaseCase logo"
               width={30}
               height={30}
             />
             <p className="h2-bold font-logofont text-dark-100 dark:text-light-900 ">
-              Dev<span className="text-primary-500">Flow</span>
+              Base<span className="text-primary-500">Case</span>
             </p>
           </Link>
 
-          <div className="no-scrollbar flex h-screen flex-col justify-around overflow-hidden px-2 pb-5">
+          <div className="no-scrollbar flex flex-1 flex-col justify-between overflow-y-auto px-2 pb-5">
             <SheetClose asChild>
-              <section className="flex h-full flex-col gap-6 pt-16">
-                <NavLinks isMobileNav={true} userId={userId}/>
+              <section className="flex flex-col gap-1 pt-14">
+                <NavLinks isMobileNav={true} userId={userId} />
               </section>
             </SheetClose>
             {!userId ? (

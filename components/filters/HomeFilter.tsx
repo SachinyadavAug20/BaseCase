@@ -1,7 +1,7 @@
 "use client";
-import {  useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import {  useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { formUrlQuery, removeUrlQuery } from "@/lib/url";
 
@@ -15,24 +15,34 @@ const filter = [
 const HomeFilter = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [active, setActive] = useState("");
+  const paramFilter = searchParams.get("filter") || "";
+  const [active, setActive] = useState(paramFilter);
+
+  useEffect(() => {
+    setActive(paramFilter);
+  }, [paramFilter]);
 
   const handleFilterChange = (value: string) => {
-    let newUrl="";
     if (value === active) {
       setActive("");
-      newUrl=removeUrlQuery({params:searchParams.toString(),keysToRemove:["filter"]})
-      router.push(newUrl,{scroll:false});
+      const newUrl = removeUrlQuery({
+        params: searchParams.toString(),
+        keysToRemove: ["filter"],
+      });
+      router.push(newUrl, { scroll: false });
     } else {
       setActive(value);
-      newUrl=formUrlQuery({params:searchParams.toString(),key:"filter",value:value})
-      router.push(newUrl,{scroll:false})
+      const newUrl = formUrlQuery({
+        params: searchParams.toString(),
+        key: "filter",
+        value: value,
+      });
+      router.push(newUrl, { scroll: false });
     }
-    router.push(newUrl,{scroll:false})
   };
 
   return (
-    <div className="mt-10 hidden flex-wrap gap-3 sm:flex">
+    <div className="no-scrollbar -mx-4 mt-6 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:mt-10 sm:flex-wrap sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0">
       {filter.map((f) => {
         return (
           <Button
@@ -40,7 +50,7 @@ const HomeFilter = () => {
               handleFilterChange(f.value);
             }}
             className={cn(
-              `body-medium rounded-lg px-6 py-3 capitalize shadow-none`,
+              `body-medium shrink-0 rounded-full px-4 py-2 capitalize shadow-none sm:rounded-lg sm:px-6 sm:py-3`,
               active === f.value
                 ? "bg-primary-100 text-primary-500 hover:bg-primary-100 dark:bg-dark-400 dark:text-primary-500 dark:hover:bg-dark-400"
                 : "bg-light-800 text-light-500 hover:bg-light-400 hover:text-light-800 dark:bg-dark-300 dark:text-ligh-500 dark:hover:bg-dark-400",

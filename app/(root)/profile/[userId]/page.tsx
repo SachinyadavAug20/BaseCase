@@ -124,8 +124,8 @@ const page = async ({ params, searchParams }: RouteParamas) => {
             id={_id.toString()}
             imageUrl={image}
             name={name}
-            className="size-[140px] rounded-full object-cover"
-            fallbackclassName="text-[80px] text-center font-bolder w-[140px] h-[140px]"
+            className="size-[110px] rounded-full object-cover sm:size-[140px]"
+            fallbackclassName="text-[56px]! text-center font-bolder w-full! h-full! pt-4! sm:text-[80px]! sm:pt-6!"
           />
           <div className="mt-3">
             <h2 className="h2-bold text-dark100_light900">{name}</h2>
@@ -176,7 +176,7 @@ const page = async ({ params, searchParams }: RouteParamas) => {
           }
         }
       />
-      <section className="mt-10 flex gap-10">
+      <section className="mt-10 flex gap-6 lg:gap-10">
         <Tabs defaultValue="top-post" className="flex-2">
           <TabsList
             variant="default"
@@ -251,7 +251,7 @@ const page = async ({ params, searchParams }: RouteParamas) => {
                         showActionBtn={
                           answer.author._id === loggedInUser?.user?.id
                         }
-                        containerClasses="card-wrapper rounded-[10px] px-7 py-9 sm:px-11"
+                        containerClasses="card-wrapper rounded-[10px] px-5 py-7 sm:px-11 sm:py-9"
                       />
                     ))}
                   </div>

@@ -8,9 +8,9 @@ const loading = () => {
         <Skeleton className="h-14 flex-1" />
         <Skeleton className="h-14 w-28" />
       </div>
-      <div className="mt-12 flex flex-wrap gap-5">
+      <div className="mt-10 grid w-full grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-4 sm:gap-5">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-          <Skeleton key={i} className="h-60 w-full rounded-2xl xs:w-[230px]" />
+          <Skeleton key={i} className="h-60 w-full rounded-2xl" />
         ))}
       </div>
     </section>

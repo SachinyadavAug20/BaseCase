@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import GlobalFilter from "./filters/GlobalFilter";
 import { GlobalSearchItem } from "@/types/global";
 
-const GlobalResult = () => {
+const GlobalResult = ({ panel = false }: { panel?: boolean }) => {
   const searchParams = useSearchParams();
 
   const [result, setResult] = useState([]);
@@ -56,7 +56,13 @@ const GlobalResult = () => {
   };
 
   return (
-    <div className="absolute top-full z-10 mt-3 w-full rounded-xl bg-light-800 py-5 shadow-sm dark:bg-dark-400">
+    <div
+      className={
+        panel
+          ? "relative z-10 mt-3 max-h-[70vh] w-full overflow-y-auto rounded-xl bg-light-800 py-5 shadow-sm dark:bg-dark-400"
+          : "absolute top-full z-10 mt-3 w-full rounded-xl bg-light-800 py-5 shadow-sm dark:bg-dark-400"
+      }
+    >
       <GlobalFilter />
       <div className="my-5 h-[1px] bg-light-700/50 dark:bg-dark-500/50" />
 

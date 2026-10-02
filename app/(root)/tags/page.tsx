@@ -46,12 +46,9 @@ const page = async ({ searchParams }: RouteParamas) => {
         data={tags}
         empty={EMPTY_TAGS}
         render={(tags) => (
-          <AnimatedList className="mt-10 flex w-full flex-wrap gap-4">
-
-            {tags.map((tag)=>{
-              return(
-                <TagCard key={tag?._id} {...tag}/>
-              )
+          <AnimatedList className="mt-10 grid w-full grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-4">
+            {tags.map((tag) => {
+              return <TagCard key={tag?._id} {...tag} />;
             })}
           </AnimatedList>
         )}

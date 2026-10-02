@@ -6,23 +6,28 @@ import { signIn } from "next-auth/react";
 import ROUTES from "@/constant/routes";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useRef } from "react";
+import { MOTION, prefersReducedMotion } from "@/lib/animation";
 
 const SocialAuthForm = () => {
   const buttonClass =
     "background-dark400_light900! SocialAuthbtn text-dark500_light700! body-medium text-dark200_light800 min-h-12 flex-1 rounded-2 px-4 py-3.5";
-  useGSAP(() => {
-    gsap.from(".SocialAuthbtn", {
-      opacity: 0,
-      y: 100,
-      x: -100,
-      scale: 1.12,
-      rotateX: 27,
-      rotateY: 76,
-      rotateZ: 45,
-      ease: "back.out(1.7)",
-      duration: 0.3,
-    });
-  });
+  const containerRef = useRef<HTMLDivElement>(null);
+  useGSAP(
+    () => {
+      if (prefersReducedMotion()) return;
+      gsap.from(".SocialAuthbtn", {
+        opacity: 0,
+        y: 20,
+        scale: 0.97,
+        stagger: 0.07,
+        duration: 0.35,
+        ease: MOTION.ease,
+        clearProps: "all",
+      });
+    },
+    { scope: containerRef },
+  );
   const handleSignIn = async (provider: "github" | "google" | "apple") => {
     try {
       if (provider === "apple") {
@@ -44,7 +49,10 @@ const SocialAuthForm = () => {
   };
 
   return (
-    <div className="mt-10 flex flex-wrap gap-2.5 opacity-100">
+    <div
+      className="mt-10 flex flex-wrap gap-2.5 opacity-100"
+      ref={containerRef}
+    >
       <Button
         className={buttonClass}
         onClick={() => {

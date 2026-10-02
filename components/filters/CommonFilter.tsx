@@ -9,10 +9,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { filter } from "@mdxeditor/editor";
 import { formUrlQuery } from "@/lib/url";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useRef } from "react";
+import { MOTION, prefersReducedMotion } from "@/lib/animation";
 
 interface filter {
   name: string;
@@ -40,20 +41,23 @@ const CommonFilter = ({
     });
     router.push(newUrl, { scroll: false });
   };
-  useGSAP(() => {
-    gsap.from(".filterbox", {
-      x: 200,
-      y: 100,
-      rotateX:22.5,
-      rotateY:45.98,
-      rotateZ:90,
-      opacity: 0,
-      duration:0.4,
-    });
-  });
+  const containerRef = useRef<HTMLDivElement>(null);
+  useGSAP(
+    () => {
+      if (prefersReducedMotion()) return;
+      gsap.from(containerRef.current, {
+        x: 24,
+        opacity: 0,
+        duration: 0.3,
+        ease: MOTION.ease,
+        clearProps: "all",
+      });
+    },
+    { scope: containerRef },
+  );
 
   return (
-    <div className={`relative ${containerClasses} filterbox`}>
+    <div className={`relative ${containerClasses} filterbox`} ref={containerRef}>
       <Select
         onValueChange={(value) => handleUpdateParams(value)}
         defaultValue={paramsFilter || undefined}

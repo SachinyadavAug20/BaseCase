@@ -1,5 +1,4 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
 
 const loading = () => {
   return (
@@ -10,10 +9,13 @@ const loading = () => {
         <Skeleton className="h-14 w-28" />
       </section>
 
-      <div className="mt-10 flex w-full flex-wrap gap-4">
+      <div className="mt-10 grid w-full grid-cols-[repeat(auto-fit,minmax(230px,1fr))] gap-4">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((tag) => {
           return (
-            <Badge key={tag} className="subtle-medium mt-11 w-44 h-48 background-light900_dark300! text-dark500_light700! rounded-md border-none px-2 py-3 uppercase flex flex-row gap-2" ></Badge>
+            <Skeleton
+              key={tag}
+              className="h-48 w-full rounded-2xl background-light900_dark300!"
+            />
           );
         })}
       </div>

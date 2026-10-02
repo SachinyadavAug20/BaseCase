@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { formUrlQuery, removeUrlQuery } from "@/lib/url";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { MOTION, prefersReducedMotion } from "@/lib/animation";
 
 interface Props {
   imgSrc: string;
@@ -24,28 +25,33 @@ const LocalSearch = ({
 }: Props) => {
   const pathname = usePathname();
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const searchParmas = useSearchParams();
   const query = searchParmas.get("query") ? searchParmas.get("query") : "";
   const [searchQuery, setSearchQuery] = useState(query);
-  useGSAP(() => {
-    gsap.from(".filterIcon", {
-      scale: 1.2,
-      duration: 0.8,
-      repeat: -1,
-      yoyo: true,
-      rotate: 20,
-      ease: "back.out(1.7)",
-    });
-    gsap.from(inputRef.current, {
-      width: 0,
-      opacity: 0,
-      padding: 0,
-      duration: 1.5,
-      ease: "back.out(1)",
-      transformOrigin: "left center",
-    });
-  });
+  useGSAP(
+    () => {
+      if (prefersReducedMotion()) return;
+      gsap.from(".filterIcon", {
+        opacity: 0,
+        scale: 0.7,
+        rotate: -15,
+        duration: 0.45,
+        ease: "back.out(2)",
+        clearProps: "all",
+      });
+      gsap.from(inputRef.current, {
+        opacity: 0,
+        x: -8,
+        duration: 0.35,
+        delay: 0.05,
+        ease: MOTION.ease,
+        clearProps: "all",
+      });
+    },
+    { scope: containerRef },
+  );
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -69,6 +75,7 @@ const LocalSearch = ({
 
   return (
     <div
+      ref={containerRef}
       className={`background-light800_darkgradient flex min-h-14 grow items-center gap-4 rounded-[10px] px-4 ${otherClasses}`}
     >
       {iconsPosition === "left" && (

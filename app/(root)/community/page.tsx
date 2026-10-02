@@ -50,7 +50,7 @@ const page = async ({ searchParams }: RouteParamas) => {
         empty={EMPTY_USERS}
         data={users}
         render={(users) => (
-          <AnimatedList className="mt-12 flex flex-wrap gap-5">
+          <AnimatedList className="mt-10 grid w-full grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-4 sm:gap-5">
             {users.map((u) => (
               <UserCard key={u._id} {...u} />
             ))}

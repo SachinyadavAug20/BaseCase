@@ -3,8 +3,10 @@ import sidebarLinks from "@/constant";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import {useGSAP} from "@gsap/react"
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useRef } from "react";
+import { MOTION, prefersReducedMotion } from "@/lib/animation";
 
 const NavLinks = ({
   isMobileNav = false,
@@ -13,21 +15,26 @@ const NavLinks = ({
   isMobileNav?: boolean;
   userId?: string;
 }) => {
-  useGSAP(()=>{
-    gsap.from("#nav-link",{
-      opacity:0,
-      y:100,
-      x:-100,
-      scale:1,
-      stagger:0.1,
-      duration:0.3,
-      rotate:45,
-      ease:"back.out(1.9)",
-    })
-  })
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      if (prefersReducedMotion()) return;
+      gsap.from(containerRef.current?.children ?? [], {
+        opacity: 0,
+        y: 14,
+        stagger: 0.045,
+        duration: 0.3,
+        ease: MOTION.ease,
+        clearProps: "all",
+      });
+    },
+    { scope: containerRef },
+  );
+
   const pathname = usePathname();
   return (
-    <div className="px-1">
+    <div className="px-1" ref={containerRef}>
       {sidebarLinks.map((link) => {
         const isActive =
           (pathname.includes(link.route) && link.route.length > 1) ||
@@ -40,7 +47,6 @@ const NavLinks = ({
 
         const linkComponent = (
           <Link
-            id="nav-link"
             href={link.route}
             key={link.label}
             className={`${
@@ -64,7 +70,7 @@ const NavLinks = ({
               </p>
             )}
             {isMobileNav && (
-              <p className={`${isActive ? "base-bold" : "base-medium"}`} id="nav-link-label">
+              <p className={`${isActive ? "base-bold" : "base-medium"}`}>
                 {link.label}
               </p>
             )}

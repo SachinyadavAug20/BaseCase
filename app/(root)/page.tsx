@@ -6,7 +6,6 @@ import HomeFilter from "@/components/filters/HomeFilter";
 import { getQuestions } from "@/lib/actions/question.action";
 import DataRenderer from "@/components/DataRenderer";
 import { EMPTY_QUESTIONS } from "@/constant/states";
-import QuestionCard from "@/components/card/QuestionCard";
 import CommonFilter from "@/components/filters/CommonFilter";
 import { HomePageFilters } from "@/constant/filter";
 import Pagination from "@/components/Pagination";
@@ -60,7 +59,7 @@ export default async function Home({ searchParams }: SearchParams) {
           data={questions}
           empty={EMPTY_QUESTIONS}
           render={(questions) => (
-            <AnimatedList x={100} y={200}>
+            <AnimatedList>
               {questions.map((q) => (
                 <DRquestions q={q} key={q._id} />
               ))}

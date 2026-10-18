@@ -13,6 +13,7 @@ import { revalidatePath } from "next/cache";
 import ROUTES from "@/constant/routes";
 import { createInteraction } from "./interaction.action";
 import { after } from "next/server";
+import { embedAnswer } from "@/lib/embedding/sync";
 
 
 export async function createAnswer(
@@ -47,7 +48,9 @@ export async function createAnswer(
         actionId: newAnswer._id.toString(),
         actionTarget: "answer",
         authorId: userId as string,
-    })})
+    })
+      await embedAnswer(newAnswer._id.toString());
+    })
     await session.commitTransaction();
     revalidatePath(`${ROUTES.QUESTIONS}/${questionId}`);
     return { success: true, data: JSON.parse(JSON.stringify(newAnswer)) };

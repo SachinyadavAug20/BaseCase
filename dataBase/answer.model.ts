@@ -6,6 +6,8 @@ export interface IAnswers {
   content:string
   upvotes:number
   downvotes:number
+  embedding?:number[] // vector for semantic search (hidden via select: false)
+  embeddingModel?:string
 }
 
 export interface IAnswerDoc extends IAnswers,Document{}
@@ -16,6 +18,8 @@ const AnswersSchema = new Schema<IAnswers>({
   content:{type:String,require:true},
   upvotes:{type:Number,default:0},
   downvotes:{type:Number,default:0},
+  embedding:{type:[Number],select:false},
+  embeddingModel:{type:String,select:false},
 },{timestamps:true});
 
 const Answers =models?.Answers || model<IAnswers>("Answers", AnswersSchema);

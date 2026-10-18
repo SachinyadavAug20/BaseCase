@@ -34,6 +34,8 @@ import { after } from "next/server";
 import { Interaction } from "@/dataBase";
 import { auth } from "@/auth";
 import { cache } from "react";
+import { embedQuestion } from "@/lib/embedding/sync";
+import { semanticQuestionSearch } from "@/lib/embedding/vector-search";
 
 export async function createQuestion(
   params: createQuestionParams,
@@ -85,6 +87,8 @@ export async function createQuestion(
         actionTarget: "question",
         authorId: userId as string,
       });
+      // deferred so slow embedding API never blocks the response
+      await embedQuestion(newQuestion._id.toString());
     });
     await session.commitTransaction();
     return { success: true, data: JSON.parse(JSON.stringify(newQuestion)) };
@@ -172,6 +176,10 @@ export async function editQuestion(
     }
     await question.save({ session });
     await session.commitTransaction();
+    after(async () => {
+      // title/content/tags may changed → regenerate the embedding
+      await embedQuestion(questionId);
+    });
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
     await session.abortTransaction();
@@ -218,6 +226,25 @@ export async function getQuestions(
   const skip = (Number(page) - 1) * Number(pageSize);
   const limit = Number(pageSize);
   const filterQuery: FilterQuery<typeof Question> = {};
+
+  // fuzzy semantic search: replaces leaf regex matching when a query is present
+  // (applies to any filter so search always uses vector relevance as base order)
+  if (query) {
+    const semantic = await semanticQuestionSearch({
+      query,
+      skip,
+      limit,
+      filter,
+    });
+    if (semantic?.questions) {
+      return {
+        success: true,
+        data: semantic as unknown as { questions: IQuestion[]; isNext: boolean },
+      };
+    }
+    // semantic search failed (no API key / index not ready) → regex fallback below
+  }
+
   if (filter === "recommeded") {
     const session = await auth();
     const userId = session?.user?.id;
